@@ -67,7 +67,7 @@ _KICKSTART_UPGRADE_URL="https://raw.githubusercontent.com/infracamp/kickstart/ma
 _KICKSTART_RELEASE_NOTES_URL="https://raw.githubusercontent.com/infracamp/kickstart/master/dist/kickstart-release-notes.txt"
 _KICKSTART_VERSION_URL="https://raw.githubusercontent.com/infracamp/kickstart/master/dist/kickstart-release.txt"
 
-_KICKSTART_CURRENT_VERSION="1.1.1"
+_KICKSTART_CURRENT_VERSION="1.2.0"
 
 ##
 # This variables can be overwritten by ~/.kickstartconfig
