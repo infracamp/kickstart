@@ -1,0 +1,2 @@
+New in version: 1.1.1 (2018-05-03)
+- Kill container if another kickstart instance is already running.
