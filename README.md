@@ -1,8 +1,6 @@
 # kickstart - Autoprovisioning Microservice Container (Linux, Windows10, MacOS)
 
-
-
-
+A bash script to start and manage your develompment containers.
 
 ## Documents index
 
