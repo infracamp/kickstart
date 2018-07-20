@@ -75,7 +75,7 @@ _KICKSTART_CURRENT_VERSION="1.2.0"
 KICKSTART_WIN_PATH=""
 
 # Publish ports - separated by semikolon (define it in .kickstartconfig)
-KICKSTART_PORTS="80:4200/tcp"
+KICKSTART_PORTS="80:80/tcp"
 # KICKSTART_PORTS="80:4200/tcp;81:4450/udp"
 
 KICKSTART_DOCKER_OPTS=""
@@ -161,6 +161,7 @@ _print_header() {
         echo "| UPDATE AVAILABLE: Head Version: $KICKSTART_NEWEST_VERSION"
         echo "| To Upgrade Version: Run ./kickstart.sh --upgrade                              "
         echo "|                                                                                 "
+        sleep 5
     fi;
 
     echo "| More information: https://github.com/infracamp/kickstart                         "
