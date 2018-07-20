@@ -4,6 +4,7 @@ A bash script to start and manage your develompment containers.
 
 ## Documents index
 
+- [InfraCamp Homepage](http://infracamp.org)
 - [**Setting up your environment**](doc/installing.md)
 - [Bash Scripting 101](doc/bash_scripting101.md)
 
