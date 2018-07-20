@@ -145,7 +145,7 @@ _print_header() {
   ███ ▀███▄ ███  ███    ███   ███ ▀███▄    ▄█    ███     ███       ███    ███   ███    ███     ███
   ███   ▀█▀ █▀   ████████▀    ███   ▀█▀  ▄████████▀     ▄████▀     ███    █▀    ███    ███    ▄████▀
   ▀                           ▀                                                 ███    ███
-  www.infracamp.com/kickstart                                                          happy containers
+  http://infracamp.org                                                                 happy containers
   " $COLOR_YELLOW "
 +-------------------------------------------------------------------------------------------------------+
 | Infracamp's Kickstart - DEVELOPER MODE                                                                |
