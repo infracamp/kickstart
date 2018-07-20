@@ -3,11 +3,11 @@
 
 ## Packing whole config-files in an ENV-Argument:
 
-Use `read` in conjunction with `printf %q` to escape the whole
-content of the file as parameter. 
+To append whole files (including newlines) use `$(cat some/file.txt)`
+inside the quoted env-name. (The whole env is paced in double-quotes `"`)
 
 ```
-docker run --net host -e CONF_JSON=$(printf %q "`cat doc/smtp-config.json`") [container]
+docker run --net host -e "CONF_JSON=$(cat path/to/file)" [container]
 ```
 
 Use `awk '1' [input-file]` to generate a single line representation to
