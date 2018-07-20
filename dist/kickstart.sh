@@ -379,7 +379,7 @@ while [ "$#" -gt 0 ]; do
 
     --skel)
         ask_user "Do you want to overwrite existing files with skeleton?"
-        curl https://codeload.github.com/c7lab/kickstart-skel/tar.gz/master | tar -xzv --strip-components=2 kickstart-skel-master/$2/ -C ./
+        curl https://codeload.github.com/infracamp/kickstart-skel/tar.gz/master | tar -xzv --strip-components=2 kickstart-skel-master/$2/ -C ./
         exit 0;;
 
     --ci-build)
