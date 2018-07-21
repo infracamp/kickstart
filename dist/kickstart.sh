@@ -265,13 +265,21 @@ DOCKER_OPT_PARAMS=$KICKSTART_DOCKER_RUN_OPTS;
 if [ -e "$HOME/.ssh" ]
 then
     echo "Mounting $HOME/.ssh..."
-    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.ssh:/home/user/.ssh";
+    if [ -e "$HOME/.ssh/id_rsa" ]
+    then
+        DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS  -e FILE_USER_SSH_ID_RSA=$(printf %q "$(cat $HOME/.ssh/id_rsa)") ";
+    fi;
+
+    if [ -e "$HOME/.ssh/id_ed25519" ]
+    then
+        DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS  -e FILE_USER_SSH_ID_ED25519=$(printf %q "$(cat $HOME/.ssh/id_ed25519)") ";
+    fi;
 fi
 
 if [ -e "$HOME/.gitconfig" ]
 then
     echo "Mounting $HOME/.gitconfig..."
-    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.gitconfig:/home/user/.gitconfig";
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -e FILE_USER_GITCONFIG=$(printf %q "$(cat $HOME/.gitconfig)") ";
 fi
 
 if [ -e "$PROGPATH/.env" ]
