@@ -300,18 +300,20 @@ run_container() {
 
     docker rm $CONTAINER_NAME
     echo -e $COLOR_WHITE "==> [$0] STARTING CONTAINER (docker run): Running container in dev-mode..." $COLOR_NC
-    docker $KICKSTART_DOCKER_OPTS run -it                                      \
-        -v "$PROGPATH/:/opt/"                           \
-        -e "DEV_CONTAINER_NAME=$CONTAINER_NAME"         \
-        -e "DEV_TTYID=[MAIN]"                           \
-        -e "DEV_UID=$UID"                               \
-        -e "LINES=$LINES"                               \
-        -e "COLUMNS=$COLUMNS"                           \
-        -e "TERM=$TERM"                                 \
-        -e "DEV_MODE=1"                                 \
-        $DOCKER_OPT_PARAMS                              \
-        --name $CONTAINER_NAME                          \
-        $USE_PIPF_VERSION $ARGUMENT
+    cmd="docker $KICKSTART_DOCKER_OPTS run -it                \
+            -v \"$PROGPATH/:/opt/\"                           \
+            -e \"DEV_CONTAINER_NAME=$CONTAINER_NAME\"         \
+            -e \"DEV_TTYID=[MAIN]\"                           \
+            -e \"DEV_UID=$UID\"                               \
+            -e \"LINES=$LINES\"                               \
+            -e \"COLUMNS=$COLUMNS\"                           \
+            -e \"TERM=$TERM\"                                 \
+            -e \"DEV_MODE=1\"                                 \
+            $DOCKER_OPT_PARAMS                              \
+            --name $CONTAINER_NAME                          \
+            $USE_PIPF_VERSION $ARGUMENT"
+    echo [exec] $cmd
+    eval $cmd
 
     status=$?
     if [[ $status -ne 0 ]]
