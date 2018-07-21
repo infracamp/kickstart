@@ -14,22 +14,13 @@ Use `awk '1' [input-file]` to generate a single line representation to
 use in stack or .env files.
 
 
-### Examples
-
-```
-#!/bin/bash
-
-OPTIONS="-e CONF_FILE=" $(printf %q "`cat doc/smtp-config.json`")
-
-
-
 
 
 ## Read command
 
 `IFS` is a variable used by `read`: 
 
-```
+```bash
 #!/bin/bash
 # setupapachevhost.sh - Apache webhosting automation demo script
 file=/tmp/domains.txt

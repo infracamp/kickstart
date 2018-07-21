@@ -31,10 +31,7 @@ at least the `from:`-Line.
 
 ```yaml
 version: 1
-from: "infracamp/kickstart"
-
-
-
+from: "infracamp/kickstart-flavor-ubuntu"
 ```
 
 Run `./kickstart.sh` - the container should start.
@@ -59,8 +56,8 @@ ___(do you have ready to use containers - append it to this list)___
 
 ## Writing config-files
 
-```.kick.yml```
-```
+`.kick.yml:`
+```yaml
 config_file:
   template: "config.php.dist"
   target: "config.php"
@@ -68,8 +65,8 @@ config_file:
 
 Will read `config.dist.php` file, which will be parsed copied into config.php.
 
-```config.dist.php```
-```
+`config.php.dist`
+```php
 <?php
 define("CONF_MYSQL_HOST", "%CONF_MYSQL_HOST%");
 define("VERSION_STRING", "%VERSION_STRING%");
@@ -118,7 +115,7 @@ this ip should be added to your pc's networks.
 You can build ready-to-deploy containers with kickstart. Just add a `Dockerfile`
 to your Project-Folder
 
-```
+```dockerfile
 FROM infracamp/kickstart-flavor-gaia
 
 ENV DEV_CONTAINER_NAME="some_name"
