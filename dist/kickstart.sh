@@ -335,7 +335,7 @@ then
     echo "# Kickstart container config file - see https://gitub.com/c7lab/kickstart" > $PROGPATH/.kick.yml
     echo "# Run ./kickstart.sh to start a development-container for this project" >> $PROGPATH/.kick.yml
     echo "version: 1" >> $PROGPATH/.kick.yml
-    echo 'from: "continue/kickstart"' >> $PROGPATH/.kick.yml
+    echo 'from: "infracamp/kickstart-flavor-gaia"' >> $PROGPATH/.kick.yml
     echo "File created. See $_KICKSTART_DOC_URL for more information";
     echo ""
     sleep 2
