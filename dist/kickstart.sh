@@ -262,24 +262,23 @@ _ci_build() {
 
 
 DOCKER_OPT_PARAMS=$KICKSTART_DOCKER_RUN_OPTS;
+
 if [ -e "$HOME/.ssh" ]
 then
     echo "Mounting $HOME/.ssh..."
-    if [ -e "$HOME/.ssh/id_rsa" ]
-    then
-        DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS  -e FILE_USER_SSH_ID_RSA=$(printf %q "$(cat $HOME/.ssh/id_rsa)") ";
-    fi;
-
-    if [ -e "$HOME/.ssh/id_ed25519" ]
-    then
-        DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS  -e FILE_USER_SSH_ID_ED25519=$(printf %q "$(cat $HOME/.ssh/id_ed25519)") ";
-    fi;
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.ssh:/home/user/.ssh";
 fi
 
 if [ -e "$HOME/.gitconfig" ]
 then
     echo "Mounting $HOME/.gitconfig..."
-    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -e FILE_USER_GITCONFIG=$(printf %q "$(cat $HOME/.gitconfig)") ";
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.gitconfig:/home/user/.gitconfig";
+fi
+
+if [ -e "$HOME/.bash_history" ]
+then
+    echo "Mounting $HOME/.bash_history..."
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.bash_history:/home/user/.bash_history";
 fi
 
 if [ -e "$PROGPATH/.env" ]
