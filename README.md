@@ -7,6 +7,7 @@ A bash script to start and manage your develompment containers.
 - [InfraCamp Homepage](http://infracamp.org)
 - [**Setting up your environment**](doc/installing.md)
 - [Bash Scripting 101](doc/bash_scripting101.md)
+- [.kick.yml reference](doc/kick.yml.md)
 
 ## Project setup: Kickstart
 
@@ -27,11 +28,13 @@ Kickstart will create an empty `.kick.yml` file in the current directory. You mi
 at least the `from:`-Line.
 
 
-## .kick.yml - Kickstart configuration file.
+## .kick.yml - Kickstart configuration file. *([Full Docs](doc/kick.yml.md))*
 
 ```yaml
 version: 1
 from: "infracamp/kickstart-flavor-ubuntu"
+
+..more options..
 ```
 
 Run `./kickstart.sh` - the container should start.
@@ -44,15 +47,11 @@ from: "infracamp/kickstart-flavor-gaia"
 ```
 
 
+
 ## Available Flavors
 
-| Flavor  | Pull-Name                          | Software                                    | Support                      |    |
-|---------|------------------------------------|---------------------------------------------|------------------------------|----|
-|         | `infracamp/kickstart-flavor-bare`   | <base container>                            |                              | |
-| gaia    | `infracamp/kickstart-flavor-gaia`   | apache2, php7.2, imagemagick, xsl, ...      | [details](https://github.com/infracamp/kickstart-flavor-gaia/blob/master/README.md)    | [![Docker Pulls](https://img.shields.io/docker/pulls/infracamp/kickstart-flavor-gaia.svg)](https://hub.docker.com/r/infracamp/kickstart-flavor-gaia/) [![Docker layers](https://images.microbadger.com/badges/image/infracamp/kickstart-flavor-gaia.svg)](https://microbadger.com/images/infracamp/kickstart-flavor-gaia) |
-| erebos  | `infracamp/kickstart-flavor-erebos` | nodejs, angular-cli (5)                     | [details](https://github.com/infracamp/kickstart-flavor-erebos/blob/master/README.md)  | [![Docker Pulls](https://img.shields.io/docker/pulls/infracamp/kickstart-flavor-erebos.svg)](https://hub.docker.com/r/infracamp/kickstart-flavor-erebos/) [![Docker layers](https://images.microbadger.com/badges/image/infracamp/kickstart-flavor-erebos.svg)](https://microbadger.com/images/infracamp/kickstart-flavor-erebos) |
-
-___(do you have ready to use containers - append it to this list)___
+See [infracamp.org/containers/](https://infracamp.org/containers/) for
+full list and links to their documentation.
 
 ## Writing config-files
 
@@ -77,9 +76,25 @@ The configuration will be loaded from environment variables.
 
 ## Development and Deploy Tool: `kick`
 
+You can define commands and run it inside the container.
+
+```
+version: 1
+from: "infracamp/kickstart-flavor-gaia"
+
+command:
+    build:
+        - "echo 'Build called'"
+    run:
+        - "echo 'Run called'"
+        
+    do_something:
+        - "echo 'doing something'"
+```
+
 - Will work from any directory
 - All paths relative to .kickstart.yml
-- Exec by default: `kick init`
+- Run commands: `kick do_something`
 
 ## System-wide config file
 
@@ -91,6 +106,7 @@ Kickstart will read the user-config from:
 Available Options:
 
 ```
+KICKSTART_DOCKER_RUN_OPTS=""        # Optional parameters passed to the docker run command
 KICKSTART_PORTS="80:4200;25:25"     # Change the Port-Mappings
 KICKSTART_WIN_PATH=                 # If running on windows - map bash 
 ```
@@ -108,6 +124,20 @@ KICKSTART_WIN_PATH=                 # If running on windows - map bash
 
 By default, kickstart will configure debuggers to send data to `10.10.10.10`. So 
 this ip should be added to your pc's networks.
+
+
+### Add links to other containers
+
+Start one or more containers. If you are not using kickstart, make sure
+you specify a name with the parameter `--name`.
+
+Create, if not already exisitng a project-wide `.kickstartconfig` file.
+Add a Line:
+
+```
+KICKSTART_DOCKER_RUN_OPTS="--link otherContainerName"
+```
+
 
 
 ## Building containers
