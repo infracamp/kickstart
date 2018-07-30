@@ -16,6 +16,7 @@
 
 # Error Handling.
 
+set -o errtrace
 trap 'on_error $LINENO' ERR;
 PROGNAME=$(basename $0)
 PROGPATH="$( cd "$(dirname "$0")" ; pwd -P )"   # The absolute path to kickstart.sh

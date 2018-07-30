@@ -40,3 +40,21 @@ done < "$file"
 ```
 
 Further readings: (https://bash.cyberciti.biz/guide/$IFS)
+
+
+## Error Handling
+
+
+```
+# Use traps in functions and subcalls
+set -o errtrace
+
+trap 'on_error $LINENO' ERR;
+PROGNAME=$(basename $0)
+PROGPATH="$( cd "$(dirname "$0")" ; pwd -P )"   # The absolute path to kickstart.sh
+
+function on_error () {
+    echo "Error: ${PROGNAME} on line $1" 1>&2
+    exit 1
+}
+```
