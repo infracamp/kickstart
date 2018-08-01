@@ -306,7 +306,7 @@ run_container() {
 		PROGPATH="${PROGPATH/\/mnt\/c\//$KICKSTART_WIN_PATH}"
 	fi
 
-    docker rm $CONTAINER_NAME
+    docker rm $CONTAINER_NAME || true
     echo -e $COLOR_WHITE "==> [$0] STARTING CONTAINER (docker run): Running container in dev-mode..." $COLOR_NC
     cmd="docker $KICKSTART_DOCKER_OPTS run -it                \
             -v \"$PROGPATH/:/opt/\"                           \
