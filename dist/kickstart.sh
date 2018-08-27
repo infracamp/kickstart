@@ -353,7 +353,7 @@ fi
 
 
 # Parse .kick.yml for line from: "docker/container:version"
-USE_PIPF_VERSION=`cat $PROGPATH/.kick.yml | sed -n 's/from\: "\(.\+\)\"/\1/p'`
+USE_PIPF_VERSION=`cat $PROGPATH/.kick.yml | grep "^from:" | tr -d '"' | awk '{print $2}'`
 
 if [ "$USE_PIPF_VERSION" == "" ]
 then
