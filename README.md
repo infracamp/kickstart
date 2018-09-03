@@ -50,7 +50,7 @@ from: "infracamp/kickstart-flavor-gaia"
 
 ## Available Flavors
 
-See [infracamp.org/containers/](https://infracamp.org/containers/) for
+See [infracamp.org/container/](https://infracamp.org/container/) for
 full list and links to their documentation.
 
 ## Writing config-files
