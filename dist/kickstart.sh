@@ -26,6 +26,10 @@ function on_error () {
     exit 1
 }
 
+# You can overwrite these variables in your .kickstartconfig
+KICKSTART_DOCKER_OPTS=""
+KICKSTART_DOCKER_RUN_OPTS=""
+KICKSTART_PORTS="80:80/tcp;4000:4000/tcp;4100:4100/tcp;4200:4200/tcp;4000:4000/udp"
 
 
 CONTAINER_NAME=${PWD##*/}
@@ -76,10 +80,9 @@ _KICKSTART_CURRENT_VERSION="1.2.0"
 KICKSTART_WIN_PATH=""
 
 # Publish ports - separated by semikolon (define it in .kickstartconfig)
-KICKSTART_PORTS="80:80/tcp;4000:4000/tcp;4100:4100/tcp;4200:4200/tcp;4000:4000/udp"
 
-KICKSTART_DOCKER_OPTS=""
-KICKSTART_DOCKER_RUN_OPTS=""
+
+
 
 if [ -e "$HOME/.kickstartconfig" ]
 then
@@ -308,11 +311,21 @@ run_container() {
 
     docker rm $CONTAINER_NAME || true
     echo -e $COLOR_WHITE "==> [$0] STARTING CONTAINER (docker run): Running container in dev-mode..." $COLOR_NC
-    cmd="docker $KICKSTART_DOCKER_OPTS run -it                \
+
+    terminal="-it"
+    dev_uid=$UID
+    if [ ! -t 1 ]
+    then
+        # Switch to non-interactive terminal (ci-build etc)
+        terminal="-t"
+        UID=1000
+    fi;
+
+    cmd="docker $KICKSTART_DOCKER_OPTS run $terminal                \
             -v \"$PROGPATH/:/opt/\"                           \
             -e \"DEV_CONTAINER_NAME=$CONTAINER_NAME\"         \
             -e \"DEV_TTYID=[MAIN]\"                           \
-            -e \"DEV_UID=$UID\"                               \
+            -e \"DEV_UID=$dev_uid\"                               \
             -e \"LINES=$LINES\"                               \
             -e \"COLUMNS=$COLUMNS\"                           \
             -e \"TERM=$TERM\"                                 \
