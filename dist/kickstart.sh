@@ -318,7 +318,7 @@ run_container() {
     then
         # Switch to non-interactive terminal (ci-build etc)
         terminal="-t"
-        UID=1000
+        dev_uid=1000
     fi;
 
     cmd="docker $KICKSTART_DOCKER_OPTS run $terminal                \
