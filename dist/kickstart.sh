@@ -82,7 +82,7 @@ KICKSTART_WIN_PATH=""
 # Publish ports - separated by semikolon (define it in .kickstartconfig)
 
 
-
+OFFLINE_MODE=0
 
 if [ -e "$HOME/.kickstartconfig" ]
 then
@@ -101,7 +101,7 @@ fi
 
 
 _usage() {
-    echo -e $COLOR_NC "Usage: $0 [<command>]
+    echo -e $COLOR_NC "Usage: $0 [<arguments>] [<command>]
 
     COMMANDS:
 
@@ -117,14 +117,19 @@ _usage() {
         $0 skel upgrade
             Upgrade to the latest kickstart version
 
+        $0 wakeup
+            Try to start a previous image with same container name (fast startup)
+
     EXAMPLES
 
         $0              Just start a shell inside the container (default development usage)
         $0 :test        Execute commands defined in section 'test' of .kick.yml
 
     ARGUMENTS
+        -h                             Show this help
         -t <tagName> --tag=<tagname>   Run container with this tag (development)
         -u --unflavored                Run the container whithout running any scripts (develpment)
+        --offline                      Do not pull images nor ask vor version upgrades
 
     "
     exit 1
@@ -153,7 +158,7 @@ _print_header() {
 
 
 
-    KICKSTART_NEWEST_VERSION=`curl -s "$_KICKSTART_VERSION_URL"`
+    KICKSTART_NEWEST_VERSION=`curl -s "$_KICKSTART_VERSION_URL"` || true
     if [ "$KICKSTART_NEWEST_VERSION" != "$_KICKSTART_CURRENT_VERSION" ]
     then
         echo "|                                                           "
@@ -296,7 +301,10 @@ done
 
 run_container() {
     echo -e $COLOR_GREEN"Loading container '$USE_PIPF_VERSION'..."
-    docker pull "$USE_PIPF_VERSION"
+    if [ "$OFFLINE_MODE" == "0" ]
+    then
+        docker pull "$USE_PIPF_VERSION"
+    fi;
 
 	if [ "$KICKSTART_WIN_PATH" != "" ]
 	then
@@ -376,7 +384,12 @@ ARGUMENT="";
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -t) USE_PIPF_VERSION="-t $2"; shift 2;;
-    --tag=*) USE_PIPF_VERSION="-t ${1#*=}"; shift 1;;
+    --tag=*)
+        USE_PIPF_VERSION="-t ${1#*=}"; shift 1;;
+
+    --offline)
+        OFFLINE_MODE=1; shift 1;;
+
 
     upgrade|--upgrade)
         echo "Checking for updates from $_KICKSTART_UPGRADE_URL..."
@@ -393,6 +406,10 @@ while [ "$#" -gt 0 ]; do
         exit 0;;
 
     --on-after-upgrade)
+        exit 0;;
+
+    wakeup)
+        docker start -ai $CONTAINER_NAME
         exit 0;;
 
     skel)
