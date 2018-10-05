@@ -120,6 +120,9 @@ _usage() {
         $0 --ci-build
             Build the service and push to gitlab registry (gitlab_ci_runner)
 
+        $0 --skel list|install [name]
+            List / Install a skeleton project (see http://github.com/infracamp/kickstart-skel)
+
     EXAMPLES
 
         $0              Just start a shell inside the container (default development usage)
@@ -400,8 +403,26 @@ while [ "$#" -gt 0 ]; do
         exit 0;;
 
     --skel)
-        ask_user "Do you want to overwrite existing files with skeleton?"
-        curl https://codeload.github.com/infracamp/kickstart-skel/tar.gz/master | tar -xzv --strip-components=2 kickstart-skel-master/$2/ -C ./
+
+        if [ "$2" == "install" ]
+        then
+            ask_user "Do you want to overwrite existing files with skeleton?"
+            curl https://codeload.github.com/infracamp/kickstart-skel/tar.gz/master | tar -xzv --strip-components=2 kickstart-skel-master/$3/ -C ./
+            exit 0;
+        fi;
+
+        if [ "$2" == "" ] || [ "$2" == "list" ]
+        then
+            echo "------ List of available skeleton projects -------"
+            curl https://raw.githubusercontent.com/infracamp/kickstart-skel/master/skel.index.txt
+            echo ""
+            echo "--------------------------------------------------"
+            echo "Install a skeleton: $0 --skel install <name>"
+            echo "";
+        else
+            echo "Unknown command: Available: $0 --skel list|install <name>"
+            exit 1
+        fi
         exit 0;;
 
     --ci-build)
