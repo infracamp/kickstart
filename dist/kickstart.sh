@@ -118,18 +118,19 @@ _usage() {
             Upgrade to the latest kickstart version
 
         $0 wakeup
-            Try to start a previous image with same container name (fast startup)
+            Try to start a previous image with same container name (faster startup)
 
     EXAMPLES
 
         $0              Just start a shell inside the container (default development usage)
         $0 :test        Execute commands defined in section 'test' of .kick.yml
+        $0 :debug       Execute the container in debug-mode (don't execute kick-commands)
 
     ARGUMENTS
         -h                             Show this help
         -t <tagName> --tag=<tagname>   Run container with this tag (development)
         -u --unflavored                Run the container whithout running any scripts (develpment)
-        --offline                      Do not pull images nor ask vor version upgrades
+        --offline                      Do not pull images nor ask for version upgrades
 
     "
     exit 1
