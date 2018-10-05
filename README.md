@@ -2,6 +2,42 @@
 
 A bash script to start and manage your develompment containers.
 
+## Quick Start
+
+Run the container defined in `.kick.yml`:
+```
+./kickstart.sh
+```
+
+Run a command defined in `.kick.yml`-`command:` section:
+```
+./kickstart.sh :[command]
+```
+
+List available skeletons:
+```
+./kickstart.sh skel list
+```
+
+Install skeleton:
+```
+./kickstart.sh skel install <name>
+```
+
+Upgrade to newest kickstart version:
+```
+./kickstart.sh upgrade
+```
+
+Run a ci-build (build and push using gitlab-ci-runner):
+```
+./kickstart.sh ci-build
+```
+
+
+
+
+
 ## Documents index
 
 - [InfraCamp Homepage](http://infracamp.org)

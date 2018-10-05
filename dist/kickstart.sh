@@ -105,33 +105,26 @@ _usage() {
 
     COMMANDS:
 
-        $0 [dev|<command>]
-            Run kick <command> and start bash inside container (development mode)
+        $0 :[command] [command2...]
+            Execute kick <command> and return (development mode)
 
-        $0 run <command>
-            Execute kick <command> and return (unit-testing)
-
-        $0 build
-            Build a standalone container
-
-        $0 test
-            Execute kick test
-
-        $0 --ci-build
+        $0 ci-build
             Build the service and push to gitlab registry (gitlab_ci_runner)
 
-        $0 --skel list|install [name]
+        $0 skel list|install [name]
             List / Install a skeleton project (see http://github.com/infracamp/kickstart-skel)
+
+        $0 skel upgrade
+            Upgrade to the latest kickstart version
 
     EXAMPLES
 
         $0              Just start a shell inside the container (default development usage)
-        $0 run test     Execute commands defined in section 'test' of .kick.yml
+        $0 :test        Execute commands defined in section 'test' of .kick.yml
 
     ARGUMENTS
         -t <tagName> --tag=<tagname>   Run container with this tag (development)
         -u --unflavored                Run the container whithout running any scripts (develpment)
-        --upgrade                      Search / Install new kickstart version
 
     "
     exit 1
@@ -377,7 +370,7 @@ then
     exit 2
 fi;
 
-
+ARGUMENT="";
 # Parse the command parameters
 ARGUMENT="";
 while [ "$#" -gt 0 ]; do
@@ -385,7 +378,7 @@ while [ "$#" -gt 0 ]; do
     -t) USE_PIPF_VERSION="-t $2"; shift 2;;
     --tag=*) USE_PIPF_VERSION="-t ${1#*=}"; shift 1;;
 
-    --upgrade)
+    upgrade|--upgrade)
         echo "Checking for updates from $_KICKSTART_UPGRADE_URL..."
         curl "$_KICKSTART_RELEASE_NOTES_URL"
 
@@ -402,8 +395,7 @@ while [ "$#" -gt 0 ]; do
     --on-after-upgrade)
         exit 0;;
 
-    --skel)
-
+    skel)
         if [ "$2" == "install" ]
         then
             ask_user "Do you want to overwrite existing files with skeleton?"
@@ -425,24 +417,28 @@ while [ "$#" -gt 0 ]; do
         fi
         exit 0;;
 
-    --ci-build)
+    ci-build|--ci-build)
         _ci_build $2 $3
         exit0;;
 
-    -h|--help)
+    help|-h|--help)
         _usage
         exit 0;;
 
     --tag) echo "$1 requires an argument" >&2; exit 1;;
 
+    :*)
+        ARGUMENT="${1:1} ${@:2}"
+        break;;
+
     -*) echo "unknown option: $1" >&2; exit 1;;
 
-    *)  break;
-
+    *)
+        echo "invalid command: $1 - see $0 help for more information" >&2; exit 2;;
   esac
 done
 
-ARGUMENT=$@;
+
 _print_header
 if [ `docker ps | grep "/kickstart/" | wc -l` -gt 0 ]
 then
