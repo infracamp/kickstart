@@ -274,36 +274,7 @@ _ci_build() {
 
 DOCKER_OPT_PARAMS=$KICKSTART_DOCKER_RUN_OPTS;
 
-if [ -e "$HOME/.ssh" ]
-then
-    echo "Mounting $HOME/.ssh..."
-    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.ssh:/home/user/.ssh";
-fi
 
-if [ -e "$HOME/.gitconfig" ]
-then
-    echo "Mounting $HOME/.gitconfig..."
-    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.gitconfig:/home/user/.gitconfig";
-fi
-
-if [ -e "$HOME/.bash_history" ]
-then
-    echo "Mounting $HOME/.bash_history..."
-    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.bash_history:/home/user/.bash_history";
-fi
-
-if [ -e "$PROGPATH/.env" ]
-then
-    echo "Adding docker environment from $PROGPATH/.env (Development only)"
-    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS --env-file $PROGPATH/.env";
-fi
-
-# Ports to be exposed
-IFS=';' read -r -a _ports <<< "$KICKSTART_PORTS"
-for _port in "${_ports[@]}"
-do
-    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -p $_port"
-done
 
 run_container() {
     echo -e $COLOR_GREEN"Loading container '$USE_PIPF_VERSION'..."
@@ -437,6 +408,37 @@ while [ "$#" -gt 0 ]; do
     *)
         echo "invalid command: $1 - see $0 help for more information" >&2; exit 2;;
   esac
+done
+
+if [ -e "$HOME/.ssh" ]
+then
+    echo "Mounting $HOME/.ssh..."
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.ssh:/home/user/.ssh";
+fi
+
+if [ -e "$HOME/.gitconfig" ]
+then
+    echo "Mounting $HOME/.gitconfig..."
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.gitconfig:/home/user/.gitconfig";
+fi
+
+if [ -e "$HOME/.bash_history" ]
+then
+    echo "Mounting $HOME/.bash_history..."
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.bash_history:/home/user/.bash_history";
+fi
+
+if [ -e "$PROGPATH/.env" ]
+then
+    echo "Adding docker environment from $PROGPATH/.env (Development only)"
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS --env-file $PROGPATH/.env";
+fi
+
+# Ports to be exposed
+IFS=';' read -r -a _ports <<< "$KICKSTART_PORTS"
+for _port in "${_ports[@]}"
+do
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -p $_port"
 done
 
 
