@@ -360,29 +360,7 @@ run_container() {
 }
 
 
-if [ ! -f "$PROGPATH/.kick.yml" ]
-then
-    echo -e $COLOR_RED "[ERR] Missing $PROGPATH/.kick.yml file." $COLOR_NC
-    ask_user "Do you want to create a new .kick.yml-file?"
-    echo "# Kickstart container config file - see https://gitub.com/c7lab/kickstart" > $PROGPATH/.kick.yml
-    echo "# Run ./kickstart.sh to start a development-container for this project" >> $PROGPATH/.kick.yml
-    echo "version: 1" >> $PROGPATH/.kick.yml
-    echo 'from: "infracamp/kickstart-flavor-gaia"' >> $PROGPATH/.kick.yml
-    echo "File created. See $_KICKSTART_DOC_URL for more information";
-    echo ""
-    sleep 2
-fi
 
-
-
-# Parse .kick.yml for line from: "docker/container:version"
-USE_PIPF_VERSION=`cat $PROGPATH/.kick.yml | grep "^from:" | tr -d '"' | awk '{print $2}'`
-
-if [ "$USE_PIPF_VERSION" == "" ]
-then
-    echo -e $COLOR_RED "[ERR] .kick.yml file does not include 'from:' - directive." $COLOR_NC
-    exit 2
-fi;
 
 ARGUMENT="";
 # Parse the command parameters
@@ -432,7 +410,7 @@ while [ "$#" -gt 0 ]; do
             curl https://raw.githubusercontent.com/infracamp/kickstart-skel/master/skel.index.txt
             echo ""
             echo "--------------------------------------------------"
-            echo "Install a skeleton: $0 --skel install <name>"
+            echo "Install a skeleton: $0 skel install <name>"
             echo "";
         else
             echo "Unknown command: Available: $0 --skel list|install <name>"
@@ -461,6 +439,30 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
+
+if [ ! -f "$PROGPATH/.kick.yml" ]
+then
+    echo -e $COLOR_RED "[ERR] Missing $PROGPATH/.kick.yml file." $COLOR_NC
+    ask_user "Do you want to create a new .kick.yml-file?"
+    echo "# Kickstart container config file - see https://gitub.com/c7lab/kickstart" > $PROGPATH/.kick.yml
+    echo "# Run ./kickstart.sh to start a development-container for this project" >> $PROGPATH/.kick.yml
+    echo "version: 1" >> $PROGPATH/.kick.yml
+    echo 'from: "infracamp/kickstart-flavor-gaia"' >> $PROGPATH/.kick.yml
+    echo "File created. See $_KICKSTART_DOC_URL for more information";
+    echo ""
+    sleep 2
+fi
+
+
+
+# Parse .kick.yml for line from: "docker/container:version"
+USE_PIPF_VERSION=`cat $PROGPATH/.kick.yml | grep "^from:" | tr -d '"' | awk '{print $2}'`
+
+if [ "$USE_PIPF_VERSION" == "" ]
+then
+    echo -e $COLOR_RED "[ERR] .kick.yml file does not include 'from:' - directive." $COLOR_NC
+    exit 2
+fi;
 
 _print_header
 if [ `docker ps | grep "/kickstart/" | wc -l` -gt 0 ]
