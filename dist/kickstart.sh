@@ -192,7 +192,7 @@ run_shell() {
         echo "";
 
         shellarg="/bin/bash"
-        if [ $ARGUMENT != "" ]
+        if [ "$ARGUMENT" != "" ]
         then
             shellarg="kick $ARGUMENT"
         fi;
