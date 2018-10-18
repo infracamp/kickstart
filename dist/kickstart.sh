@@ -30,6 +30,8 @@ function on_error () {
 KICKSTART_DOCKER_OPTS=""
 KICKSTART_DOCKER_RUN_OPTS=""
 KICKSTART_PORTS="80:80/tcp;4000:4000/tcp;4100:4100/tcp;4200:4200/tcp;4000:4000/udp"
+KICKSTART_HOST_IP=$(hostname -I | awk '{print $1;}')
+
 
 
 CONTAINER_NAME=${PWD##*/}
@@ -315,8 +317,7 @@ run_container() {
             -e \"DEV_CONTAINER_NAME=$CONTAINER_NAME\"         \
             -e \"DEV_TTYID=[MAIN]\"                           \
             -e \"DEV_UID=$dev_uid\"                               \
-            -e \"LINES=$LINES\"                               \
-            -e \"COLUMNS=$COLUMNS\"                           \
+            -e \"DOCKER_HOST_IP=$KICKSTART_HOST_IP\"               \
             -e \"TERM=$TERM\"                                 \
             -e \"DEV_MODE=1\"                                 \
             $DOCKER_OPT_PARAMS                              \
