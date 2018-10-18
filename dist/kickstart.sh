@@ -190,7 +190,15 @@ run_shell() {
         echo "[kickstart.sh] Container '$CONTAINER_NAME' already running"
         echo "Starting shell... (please press enter)"
         echo "";
-        docker exec -it --user user -e "DEV_TTYID=[SUB]" $CONTAINER_NAME /bin/bash
+
+        shellarg="/bin/bash"
+        if [ $ARGUMENT != "" ]
+        then
+            shellarg="kick $ARGUMENT"
+        fi;
+
+        docker exec -it --user user -e "DEV_TTYID=[SUB]" $CONTAINER_NAME $shellarg
+
         echo -e $COLOR_CYAN;
         echo "<=== [kickstart.sh] Leaving container."
         echo -e $COLOR_NC
