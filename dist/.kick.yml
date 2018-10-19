@@ -1,0 +1,4 @@
+# Kickstart container config file - see https://gitub.com/c7lab/kickstart
+# Run ./kickstart.sh to start a development-container for this project
+version: 1
+from: "infracamp/kickstart-flavor-gaia"

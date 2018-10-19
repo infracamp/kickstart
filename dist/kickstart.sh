@@ -185,7 +185,12 @@ _print_header() {
 
 run_shell() {
    echo -e $COLOR_CYAN;
-
+    terminal="-it"
+    if [ ! -t 1 ]
+    then
+        # Switch to non-interactive terminal (ci-build etc)
+        terminal="-t"
+    fi;
 
    if [ `docker ps | grep $CONTAINER_NAME | wc -l` -gt 0 ]
    then
@@ -199,7 +204,7 @@ run_shell() {
             shellarg="kick $ARGUMENT"
         fi;
 
-        docker exec -it --user user -e "DEV_TTYID=[SUB]" $CONTAINER_NAME $shellarg
+        docker exec $terminal --user user -e "DEV_TTYID=[SUB]" $CONTAINER_NAME $shellarg
 
         echo -e $COLOR_CYAN;
         echo "<=== [kickstart.sh] Leaving container."
@@ -219,7 +224,7 @@ run_shell() {
         echo "===> [kickstart.sh] Opening new shell: "
         echo -e $COLOR_NC
 
-        docker exec -it --user user -e "DEV_TTYID=[SUB]" `docker ps | grep "/kickstart/" | cut -d" " -f1` /bin/bash
+        docker exec $terminal --user user -e "DEV_TTYID=[SUB]" `docker ps | grep "/kickstart/" | cut -d" " -f1` /bin/bash
 
         echo -e $COLOR_CYAN;
         echo "<=== [kickstart.sh] Leaving container."
