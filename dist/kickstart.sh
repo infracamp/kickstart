@@ -215,9 +215,10 @@ run_shell() {
    echo "[kickstart.s] Another container is already running!"
    docker ps
    echo ""
-   read -r -p "Your choice: (i)gnore, (s)hell, (k)ill, (a)bort?:" choice
+   read -r -p "Your choice: (i)gnore/run anyway, (s)hell, (k)ill, (a)bort?:" choice
    case "$choice" in
       i|I)
+        run_container
         return 0;
         ;;
       s|S)
