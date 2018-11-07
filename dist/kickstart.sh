@@ -9,9 +9,9 @@
 #
 # Config-File: .kick.yml
 #
-# Kickstart home: https://github.com/c7lab/kickstart
+# Kickstart home: https://github.com/infracamp/kickstart
 #
-# Author: Matthias Leuffen <leuffen@continue.de>
+# Author: Matthias Leuffen <m@tth.es>
 #
 
 # Error Handling.
