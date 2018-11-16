@@ -192,7 +192,7 @@ run_shell() {
         terminal="-t"
     fi;
 
-   if [ `docker ps | grep $CONTAINER_NAME | wc -l` -gt 0 ]
+   if [ `docker ps | grep "$CONTAINER_NAME\$" | wc -l` -gt 0 ]
    then
         echo "[kickstart.sh] Container '$CONTAINER_NAME' already running"
         echo "Starting shell... (please press enter)"
