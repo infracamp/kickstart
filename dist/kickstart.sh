@@ -191,8 +191,6 @@ _print_header() {
 
 run_shell() {
    echo -e $COLOR_CYAN;
-
-
    if [ `docker ps | grep "$CONTAINER_NAME\$" | wc -l` -gt 0 ]
    then
         echo "[kickstart.sh] Container '$CONTAINER_NAME' already running"
