@@ -105,7 +105,12 @@ then
     . $PROGPATH/.kickstartconfig
 fi
 
-
+terminal="-it"
+if [ ! -t 1 ]
+then
+    # Switch to non-interactive terminal (ci-build etc)
+    terminal="-t"
+fi;
 
 _usage() {
     echo -e $COLOR_NC "Usage: $0 [<arguments>] [<command>]
@@ -138,6 +143,7 @@ _usage() {
         -t <tagName> --tag=<tagname>   Run container with this tag (development)
         -u --unflavored                Run the container whithout running any scripts (develpment)
         --offline                      Do not pull images nor ask for version upgrades
+        --no-tty                       Disable interactive tty
 
     "
     exit 1
@@ -185,14 +191,9 @@ _print_header() {
 
 run_shell() {
    echo -e $COLOR_CYAN;
-    terminal="-it"
-    if [ ! -t 1 ]
-    then
-        # Switch to non-interactive terminal (ci-build etc)
-        terminal="-t"
-    fi;
 
-   if [ `docker ps | grep $CONTAINER_NAME | wc -l` -gt 0 ]
+
+   if [ `docker ps | grep "$CONTAINER_NAME\$" | wc -l` -gt 0 ]
    then
         echo "[kickstart.sh] Container '$CONTAINER_NAME' already running"
         echo "Starting shell... (please press enter)"
@@ -309,12 +310,10 @@ run_container() {
     docker rm $CONTAINER_NAME || true
     echo -e $COLOR_WHITE "==> [$0] STARTING CONTAINER (docker run): Running container in dev-mode..." $COLOR_NC
 
-    terminal="-it"
     dev_uid=$UID
     if [ ! -t 1 ]
     then
         # Switch to non-interactive terminal (ci-build etc)
-        terminal="-t"
         dev_uid=1000
     fi;
 
@@ -360,6 +359,10 @@ while [ "$#" -gt 0 ]; do
     --offline)
         OFFLINE_MODE=1; shift 1;;
 
+    --no-tty)
+        echo "Disabling interactive terminal"
+        terminal=""
+        shift 1;;
 
     upgrade|--upgrade)
         echo "Checking for updates from $_KICKSTART_UPGRADE_URL..."
