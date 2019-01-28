@@ -31,6 +31,7 @@ KICKSTART_DOCKER_OPTS=""
 KICKSTART_DOCKER_RUN_OPTS=""
 KICKSTART_PORTS="80:80/tcp;4000:4000/tcp;4100:4100/tcp;4200:4200/tcp;4000:4000/udp"
 KICKSTART_HOST_IP=$(hostname -I | awk '{print $1;}')
+KICKSTART_DEFAULT_OFFLINE_MODE=0
 
 
 
@@ -89,7 +90,7 @@ KICKSTART_WIN_PATH=""
 # Publish ports - separated by semikolon (define it in .kickstartconfig)
 
 
-OFFLINE_MODE=0
+OFFLINE_MODE=$KICKSTART_DEFAULT_OFFLINE_MODE
 
 if [ -e "$HOME/.kickstartconfig" ]
 then
@@ -296,6 +297,8 @@ run_container() {
     if [ "$OFFLINE_MODE" == "0" ]
     then
         docker pull "$USE_PIPF_VERSION"
+    else
+        echo -e $COLOR_RED "OFFLINE MODE! Not pulling image from registy. " $COLOR_NC
     fi;
 
 	if [ "$KICKSTART_WIN_PATH" != "" ]
