@@ -465,13 +465,15 @@ if [ ! -f "$PROGPATH/.kick.yml" ]
 then
     echo -e $COLOR_RED "[ERR] Missing $PROGPATH/.kick.yml file." $COLOR_NC
     ask_user "Do you want to create a new .kick.yml-file?"
-    echo "# Kickstart container config file - see https://gitub.com/c7lab/kickstart" > $PROGPATH/.kick.yml
+    echo "# Kickstart container config file - see https://gitub.com/infracamp/kickstart" > $PROGPATH/.kick.yml
     echo "# Run ./kickstart.sh to start a development-container for this project" >> $PROGPATH/.kick.yml
     echo "version: 1" >> $PROGPATH/.kick.yml
-    echo 'from: "infracamp/kickstart-flavor-gaia"' >> $PROGPATH/.kick.yml
+    echo 'from: "infracamp/kickstart-flavor-base"' >> $PROGPATH/.kick.yml
     echo "File created. See $_KICKSTART_DOC_URL for more information";
     echo ""
+    echo "You can now run ./kickstart.sh to start the container"
     sleep 2
+    exit 6
 fi
 
 
