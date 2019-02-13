@@ -30,7 +30,16 @@ function on_error () {
 KICKSTART_DOCKER_OPTS=""
 KICKSTART_DOCKER_RUN_OPTS=""
 KICKSTART_PORTS="80:80/tcp;4000:4000/tcp;4100:4100/tcp;4200:4200/tcp;4000:4000/udp"
-KICKSTART_HOST_IP=$(hostname -I | awk '{print $1;}')
+
+KICKSTART_HOST_IP=$(hostname -i | awk '{print $1;}')
+if [ "$KICKSTART_HOST_IP" == "" ]
+then
+    # Workaround for systems not supporting hostname -i (MAC)
+    # See doc/workaround-plattforms.md for more about this
+    KICKSTART_HOST_IP=$(host `hostname`|awk '{print $NF}')
+fi;
+
+
 KICKSTART_DEFAULT_OFFLINE_MODE=0
 
 
