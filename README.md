@@ -147,6 +147,32 @@ KICKSTART_PORTS="80:4200;25:25"     # Change the Port-Mappings
 KICKSTART_WIN_PATH=                 # If running on windows - map bash 
 ```
 
+## Starting a stack of helper services
+
+Kickstart will search for a file `.kick-stack.yml` in the project main
+directory. If this file exists, it will be deployed as docker stack.
+
+**Make sure, all services you want to access from within your container
+are attached to the external network `project_name`**
+
+Assume our project_name is `my_proj_1` and we want to provide a mysql service
+```yaml
+version: "3"
+services:
+  mysqld:
+    image: mysql
+    networks:
+      - my_proj_1
+
+
+networks:
+  my_proj_1:
+    external: true
+```
+
+The mysql service will be availabe as `my_proj_1_mysqld`.
+
+
 ## Project-wide config file
 
 ```
