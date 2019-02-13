@@ -320,6 +320,24 @@ run_container() {
     docker rm $CONTAINER_NAME || true
     echo -e $COLOR_WHITE "==> [$0] STARTING CONTAINER (docker run): Running container in dev-mode..." $COLOR_NC
 
+
+    _STACKFILE="$PROGPATH/.kick-stack.yml"
+    if [ -e "$_STACKFILE" ]; then
+        _STACK_NETWORK_NAME=$CONTAINER_NAME
+
+        echo "Startin in stack mode... (network: '$_STACK_NETWORK_NAME')"
+        _NETWORKS=$(docker network ls | grep $_STACK_NETWORK_NAME | wc -l)
+        echo nets: $_NETWORKS
+        if [ $_NETWORKS -eq 0 ]; then
+            docker swarm init
+            docker network create --attachable -d overlay $_STACK_NETWORK_NAME
+        fi;
+
+        docker stack deploy --prune -c $_STACKFILE $CONTAINER_NAME
+        DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS --network $_STACK_NETWORK_NAME"
+    fi;
+
+
     dev_uid=$UID
     if [ ! -t 1 ]
     then

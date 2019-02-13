@@ -1,0 +1,16 @@
+## If this file exists, kickstart will deploy the stack project_name
+
+version: "3"
+
+
+services:
+  some_service:
+    image: some/image
+    networks:
+      - project_name
+
+
+networks:
+  project_name:
+    external: true
+    ## Very important: Otherwise no connection
