@@ -132,20 +132,6 @@ command:
 - All paths relative to .kickstart.yml
 - Run commands: `kick do_something`
 
-## System-wide config file
-
-Kickstart will read the user-config from:
-```
-~/.kickstartconfig
-```
-
-Available Options:
-
-```
-KICKSTART_DOCKER_RUN_OPTS=""        # Optional parameters passed to the docker run command
-KICKSTART_PORTS="80:4200;25:25"     # Change the Port-Mappings
-KICKSTART_WIN_PATH=                 # If running on windows - map bash 
-```
 
 ## Starting a stack of helper services
 
@@ -171,6 +157,24 @@ networks:
 ```
 
 The mysql service will be availabe as `my_proj_1_mysqld`.
+
+
+## System-wide config file
+
+Kickstart will read the user-config from:
+```
+~/.kickstartconfig
+```
+
+Available Options:
+
+```
+KICKSTART_DOCKER_RUN_OPTS=""        # Optional parameters passed to the docker run command
+KICKSTART_PORTS="80:4200;25:25"     # Change the Port-Mappings
+KICKSTART_WIN_PATH=                 # If running on windows - map bash 
+```
+
+
 
 
 ## Project-wide config file
