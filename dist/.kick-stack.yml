@@ -4,6 +4,7 @@ version: "3"
 
 
 services:
+  # This service will be available as: project_name_some_service
   some_service:
     image: some/image
     networks:
