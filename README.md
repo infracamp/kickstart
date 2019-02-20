@@ -2,6 +2,42 @@
 
 A bash script to start and manage your develompment containers.
 
+## Quick Start
+
+Run the container defined in `.kick.yml`:
+```
+./kickstart.sh
+```
+
+Run a command defined in `.kick.yml`-`command:` section:
+```
+./kickstart.sh :[command]
+```
+
+List available skeletons:
+```
+./kickstart.sh skel list
+```
+
+Install skeleton:
+```
+./kickstart.sh skel install <name>
+```
+
+Upgrade to newest kickstart version:
+```
+./kickstart.sh upgrade
+```
+
+Run a ci-build (build and push using gitlab-ci-runner):
+```
+./kickstart.sh ci-build
+```
+
+
+
+
+
 ## Documents index
 
 - [InfraCamp Homepage](http://infracamp.org)
@@ -96,6 +132,33 @@ command:
 - All paths relative to .kickstart.yml
 - Run commands: `kick do_something`
 
+
+## Starting a stack of helper services
+
+Kickstart will search for a file `.kick-stack.yml` in the project main
+directory. If this file exists, it will be deployed as docker stack.
+
+**Make sure, all services you want to access from within your container
+are attached to the external network `project_name`**
+
+Assume our project_name is `my_proj_1` and we want to provide a mysql service
+```yaml
+version: "3"
+services:
+  mysqld:
+    image: mysql
+    networks:
+      - my_proj_1
+
+
+networks:
+  my_proj_1:
+    external: true
+```
+
+The mysql service will be availabe as `my_proj_1_mysqld`.
+
+
 ## System-wide config file
 
 Kickstart will read the user-config from:
@@ -110,6 +173,9 @@ KICKSTART_DOCKER_RUN_OPTS=""        # Optional parameters passed to the docker r
 KICKSTART_PORTS="80:4200;25:25"     # Change the Port-Mappings
 KICKSTART_WIN_PATH=                 # If running on windows - map bash 
 ```
+
+
+
 
 ## Project-wide config file
 
