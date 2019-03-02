@@ -69,6 +69,11 @@ if test -t 1; then
     fi;
 fi;
 
+
+KICKSTART_CACHE_DIR="$HOME/.kick_cache"
+mkdir -p $KICKSTART_CACHE_DIR
+
+
 if [ "$DEV_CONTAINER_NAME" != "" ]
 then
     echo -e $COLOR_RED "\n[ERR] Are you trying to run kickstart.sh from inside a kickstart container?!"
@@ -487,6 +492,7 @@ do
     DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -p $_port"
 done
 
+DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $KICKSTART_CACHE_DIR:/mnt/.kick_cache"
 
 if [ ! -f "$PROGPATH/.kick.yml" ]
 then
