@@ -30,6 +30,9 @@ OFFLINE_MODE=0
 # Specify the container name by yourself (switch of auto-detection)
 CONTAINER_NAME=
 
+# The image (e.g. infracamp/kickstart-flavor-base:testing) specified in .kick.yml from:-section
+FROM_IMAGE=
+
 ############################
 ### CODE BELOW           ###
 ############################
