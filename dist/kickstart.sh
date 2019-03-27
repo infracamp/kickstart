@@ -118,6 +118,30 @@ _KICKSTART_CURRENT_VERSION="1.2.0"
 #
 KICKSTART_WIN_PATH=""
 
+if [ ! -f "$PROGPATH/.kick.yml" ]
+then
+    echo -e $COLOR_RED "[ERR] Missing $PROGPATH/.kick.yml file." $COLOR_NC
+    ask_user "Do you want to create a new .kick.yml-file?"
+    echo "# Kickstart container config file - see https://gitub.com/infracamp/kickstart" > $PROGPATH/.kick.yml
+    echo "# Run ./kickstart.sh to start a development-container for this project" >> $PROGPATH/.kick.yml
+    echo "version: 1" >> $PROGPATH/.kick.yml
+    echo 'from: "infracamp/kickstart-flavor-base"' >> $PROGPATH/.kick.yml
+    echo "File created. See $_KICKSTART_DOC_URL for more information";
+    echo ""
+    echo "You can now run ./kickstart.sh to start the container"
+    sleep 2
+    exit 6
+fi
+
+
+
+# Parse .kick.yml for line from: "docker/container:version"
+FROM_IMAGE=`cat $PROGPATH/.kick.yml | grep "^from:" | tr -d '"' | awk '{print $2}'`
+if [ "$FROM_IMAGE" == "" ]
+then
+    echo -e $COLOR_RED "[ERR] .kick.yml file does not include 'from:' - directive." $COLOR_NC
+    exit 2
+fi;
 
 if [ -e "$HOME/.kickstartconfig" ]
 then
@@ -196,7 +220,7 @@ _print_header() {
 +-------------------------------------------------------------------------------------------------------+
 | Infracamp's Kickstart - DEVELOPER MODE                                                                |
 | Version: $_KICKSTART_CURRENT_VERSION
-| Flavour: $USE_PIPF_VERSION (defined in 'from:'-section of .kick.yml)"
+| Flavour: $FROM_IMAGE (defined in 'from:'-section of .kick.yml)"
 
 
 
@@ -320,10 +344,10 @@ DOCKER_OPT_PARAMS=$KICKSTART_DOCKER_RUN_OPTS;
 
 
 run_container() {
-    echo -e $COLOR_GREEN"Loading container '$USE_PIPF_VERSION'..."
+    echo -e $COLOR_GREEN"Loading container '$FROM_IMAGE'..."
     if [ "$OFFLINE_MODE" == "0" ]
     then
-        docker pull "$USE_PIPF_VERSION"
+        docker pull "$FROM_IMAGE"
     else
         echo -e $COLOR_RED "OFFLINE MODE! Not pulling image from registy. " $COLOR_NC
     fi;
@@ -373,7 +397,7 @@ run_container() {
             -e \"DEV_MODE=1\"                                 \
             $DOCKER_OPT_PARAMS                              \
             --name $CONTAINER_NAME                          \
-            $USE_PIPF_VERSION $ARGUMENT"
+            $FROM_IMAGE $ARGUMENT"
     echo [exec] $cmd
     eval $cmd
 
@@ -507,31 +531,7 @@ done
 
 DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $KICKSTART_CACHE_DIR:/mnt/.kick_cache"
 
-if [ ! -f "$PROGPATH/.kick.yml" ]
-then
-    echo -e $COLOR_RED "[ERR] Missing $PROGPATH/.kick.yml file." $COLOR_NC
-    ask_user "Do you want to create a new .kick.yml-file?"
-    echo "# Kickstart container config file - see https://gitub.com/infracamp/kickstart" > $PROGPATH/.kick.yml
-    echo "# Run ./kickstart.sh to start a development-container for this project" >> $PROGPATH/.kick.yml
-    echo "version: 1" >> $PROGPATH/.kick.yml
-    echo 'from: "infracamp/kickstart-flavor-base"' >> $PROGPATH/.kick.yml
-    echo "File created. See $_KICKSTART_DOC_URL for more information";
-    echo ""
-    echo "You can now run ./kickstart.sh to start the container"
-    sleep 2
-    exit 6
-fi
 
-
-
-# Parse .kick.yml for line from: "docker/container:version"
-USE_PIPF_VERSION=`cat $PROGPATH/.kick.yml | grep "^from:" | tr -d '"' | awk '{print $2}'`
-
-if [ "$USE_PIPF_VERSION" == "" ]
-then
-    echo -e $COLOR_RED "[ERR] .kick.yml file does not include 'from:' - directive." $COLOR_NC
-    exit 2
-fi;
 
 _print_header
 if [ `docker ps | grep "/kickstart/" | wc -l` -gt 0 ]
