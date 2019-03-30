@@ -121,6 +121,25 @@ _KICKSTART_CURRENT_VERSION="1.2.0"
 #
 KICKSTART_WIN_PATH=""
 
+
+ask_user() {
+    echo "";
+    read -r -p "$1 (y|N)" choice
+    case "$choice" in
+      n|N)
+        echo "Abort!";
+        ;;
+      y|Y)
+        return 0;
+        ;;
+
+      *)
+        echo 'Response not valid';;
+    esac
+    exit 1;
+}
+
+
 if [ ! -f "$PROGPATH/.kick.yml" ]
 then
     echo -e $COLOR_RED "[ERR] Missing $PROGPATH/.kick.yml file." $COLOR_NC
@@ -301,22 +320,6 @@ run_shell() {
 }
 
 
-ask_user() {
-    echo "";
-    read -r -p "$1 (y|N)" choice
-    case "$choice" in
-      n|N)
-        echo "Abort!";
-        ;;
-      y|Y)
-        return 0;
-        ;;
-
-      *)
-        echo 'Response not valid';;
-    esac
-    exit 1;
-}
 
 _ci_build() {
 
