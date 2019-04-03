@@ -51,7 +51,13 @@ function on_error () {
 
 
 
-KICKSTART_HOST_IP=$(hostname -i | awk '{print $1;}')
+# USE -I to determine all interfaces (debian/ubuntu)
+KICKSTART_HOST_IP=$(hostname -I | awk '{print $1;}')
+if [ "$KICKSTART_HOST_IP" == "" ]
+then
+    # Workaround for systems not supporting -I
+    KICKSTART_HOST_IP=$(hostname -i | awk '{print $1;}')
+fi;
 if [ "$KICKSTART_HOST_IP" == "" ]
 then
     # Workaround for systems not supporting hostname -i (MAC)
