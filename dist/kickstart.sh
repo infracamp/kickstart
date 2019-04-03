@@ -50,12 +50,11 @@ function on_error () {
 }
 
 
-
 # USE -I to determine all interfaces (debian/ubuntu)
 KICKSTART_HOST_IP=$(hostname -I | awk '{print $1;}')
 if [ "$KICKSTART_HOST_IP" == "" ]
 then
-    # Workaround for systems not supporting -I
+    # Workaround for systems not supporting -I (alpine / ci-builds)
     KICKSTART_HOST_IP=$(hostname -i | awk '{print $1;}')
 fi;
 if [ "$KICKSTART_HOST_IP" == "" ]
@@ -64,10 +63,6 @@ then
     # See doc/workaround-plattforms.md for more about this
     KICKSTART_HOST_IP=$(host `hostname`|awk '{print $NF}')
 fi;
-
-
-
-
 
 
 CONTAINER_NAME=${PWD##*/}
