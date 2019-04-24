@@ -61,7 +61,7 @@ if [ "$KICKSTART_HOST_IP" == "" ]
 then
     # Workaround for systems not supporting hostname -i (MAC)
     # See doc/workaround-plattforms.md for more about this
-    KICKSTART_HOST_IP=$(host `hostname`|awk '{print $NF}')
+    KICKSTART_HOST_IP=$(ping -c 1 $(hostname) | grep icmp_seq | awk 'match($0,/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/){print substr($0, RSTART, RLENGTH)}')
 fi;
 
 
