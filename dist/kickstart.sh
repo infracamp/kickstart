@@ -71,7 +71,7 @@ fi;
 
 
 function on_error () {
-    echo -e "\e[1;101m" 1>&2
+    echo -e "\e[1;101;30m" 1>&2
     echo "";
     echo -en "  ERROR: ${PROGNAME} on line $1: '" $(head -n $1 $PROGNAME | tail -1) "'" 1>&2
     echo "";
