@@ -82,11 +82,11 @@ function on_error () {
 
 
 # USE -I to determine all interfaces (debian/ubuntu)
-KICKSTART_HOST_IP=$(hostname -I | awk '{print $1;}')
+KICKSTART_HOST_IP=$(hostname -I 2> /dev/null | awk '{print $1;}' )
 if [ "$KICKSTART_HOST_IP" == "" ]
 then
     # Workaround for systems not supporting -I (alpine / ci-builds)
-    KICKSTART_HOST_IP=$(hostname -i | awk '{print $1;}')
+    KICKSTART_HOST_IP=$(hostname -i 2> /dev/null | awk '{print $1;}')
 fi;
 if [ "$KICKSTART_HOST_IP" == "" ]
 then
