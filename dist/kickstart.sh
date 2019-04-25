@@ -71,11 +71,11 @@ fi;
 
 
 function on_error () {
+    local exit_code=$?
     local prog=$BASH_COMMAND
-    echo -e "\e[1;101;30m" 1>&2
-    echo "";
-    echo -en "  ERROR: ${PROGNAME} on line $1: '$prog'" 1>&2
-    echo "";
+
+    echo -e "\e[1;101;30m\n" 1>&2
+    echo -en "KICKSTART ERROR: '$prog' (Exit code: $exit_code on ${PROGNAME} line $1)\n" 1>&2
     echo -e "\e[0m" 1>&2
 
     exit 1
