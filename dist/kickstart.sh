@@ -71,9 +71,10 @@ fi;
 
 
 function on_error () {
+    local prog=$BASH_COMMAND
     echo -e "\e[1;101;30m" 1>&2
     echo "";
-    echo -en "  ERROR: ${PROGNAME} on line $1: '" $(head -n $1 $PROGNAME | tail -1) "'" 1>&2
+    echo -en "  ERROR: ${PROGNAME} on line $1: '$prog'" 1>&2
     echo "";
     echo -e "\e[0m" 1>&2
 
