@@ -44,28 +44,6 @@ trap 'on_error $LINENO' ERR;
 PROGNAME=$(basename $0)
 PROGPATH="$( cd "$(dirname "$0")" ; pwd -P )"   # The absolute path to kickstart.sh
 
-function on_error () {
-    echo "Error: ${PROGNAME} on line $1" 1>&2
-    exit 1
-}
-
-
-# USE -I to determine all interfaces (debian/ubuntu)
-KICKSTART_HOST_IP=$(hostname -I | awk '{print $1;}')
-if [ "$KICKSTART_HOST_IP" == "" ]
-then
-    # Workaround for systems not supporting -I (alpine / ci-builds)
-    KICKSTART_HOST_IP=$(hostname -i | awk '{print $1;}')
-fi;
-if [ "$KICKSTART_HOST_IP" == "" ]
-then
-    # Workaround for systems not supporting hostname -i (MAC)
-    # See doc/workaround-plattforms.md for more about this
-    KICKSTART_HOST_IP=$(ping -c 1 $(hostname) | grep icmp_seq | awk 'match($0,/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/){print substr($0, RSTART, RLENGTH)}')
-fi;
-
-
-CONTAINER_NAME=${PWD##*/}
 if test -t 1; then
     # see if it supports colors...
     ncolors=$(tput colors)
@@ -89,6 +67,37 @@ if test -t 1; then
         export COLOR_LIGHT_GRAY='\e[0;37m'
     fi;
 fi;
+
+
+
+function on_error () {
+    echo -e "\e[1;101m" 1>&2
+    echo "";
+    echo -en "  ERROR: ${PROGNAME} on line $1: '" $(head -n $1 $PROGNAME | tail -1) "'" 1>&2
+    echo "";
+    echo -e "\e[0m" 1>&2
+
+    exit 1
+}
+
+
+# USE -I to determine all interfaces (debian/ubuntu)
+KICKSTART_HOST_IP=$(hostname -I | awk '{print $1;}')
+if [ "$KICKSTART_HOST_IP" == "" ]
+then
+    # Workaround for systems not supporting -I (alpine / ci-builds)
+    KICKSTART_HOST_IP=$(hostname -i | awk '{print $1;}')
+fi;
+if [ "$KICKSTART_HOST_IP" == "" ]
+then
+    # Workaround for systems not supporting hostname -i (MAC)
+    # See doc/workaround-plattforms.md for more about this
+    KICKSTART_HOST_IP=$(ping -c 1 $(hostname) | grep icmp_seq | awk 'match($0,/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/){print substr($0, RSTART, RLENGTH)}')
+fi;
+
+
+CONTAINER_NAME=${PWD##*/}
+
 
 
 KICKSTART_CACHE_DIR="$HOME/.kick_cache"
