@@ -85,12 +85,12 @@ function on_error () {
 }
 
 
-if [ "$KICKSTART_HOST_IP" == "" ]
+if [[ "$KICKSTART_HOST_IP" == "" ]]
 then
     # Autodetect for ubuntu, arch
     KICKSTART_HOST_IP=$(ip route list | grep -v default | grep -v linkdown | grep src | tail -1 | awk 'match($0, / [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/){print substr($0, RSTART+1, RLENGTH-1)}' 2> /dev/null)
 fi;
-if [ "$KICKSTART_HOST_IP" == "" ]
+if [[ "$KICKSTART_HOST_IP" == "" ]]
 then
     # Workaround for systems not supporting hostname -i (MAC)
     # See doc/workaround-plattforms.md for more about this
@@ -98,7 +98,7 @@ then
 fi;
 
 
-if [ "$CONTAINER_NAME" == "" ]
+if [[ "$CONTAINER_NAME" == "" ]]
 then
     CONTAINER_NAME=${PWD##*/}
 fi;
