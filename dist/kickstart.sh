@@ -283,21 +283,45 @@ run_shell() {
    if [ `docker ps | grep "$CONTAINER_NAME\$" | wc -l` -gt 0 ]
    then
         echo "[kickstart.sh] Container '$CONTAINER_NAME' already running"
-        echo "Starting shell... (please press enter)"
-        echo "";
 
-        shellarg="/bin/bash"
-        if [ "$ARGUMENT" != "" ]
+        choice="s"
+        if [[ "$ARGUMENT" == "" ]]
         then
-            shellarg="kick $ARGUMENT"
-        fi;
+            read -r -p "Your choice: (S)hell, (r)estart, (a)bort?" choice
+        fi
 
-        docker exec $terminal --user user -e "DEV_TTYID=[SUB]" $CONTAINER_NAME $shellarg
+        case "$choice" in
+            a)
+                echo "Abort";
+                exit 0;
+                ;;
 
-        echo -e $COLOR_CYAN;
-        echo "<=== [kickstart.sh] Leaving container."
-        echo -e $COLOR_NC
-        exit 0;
+            r|R)
+                echo "Restarting container..."
+                docker kill $CONTAINER_NAME
+                run_container
+                exit 0;
+                ;;
+           s|S|*)
+                echo "Starting shell... (please press enter)"
+                echo "";
+
+                shellarg="/bin/bash"
+                if [ "$ARGUMENT" != "" ]
+                then
+                    shellarg="kick $ARGUMENT"
+                fi;
+
+                docker exec $terminal --user user -e "DEV_TTYID=[SUB]" $CONTAINER_NAME $shellarg
+
+                echo -e $COLOR_CYAN;
+                echo "<=== [kickstart.sh] Leaving container."
+                echo -e $COLOR_NC
+                exit 0;
+                ;;
+        esac
+
+
    fi
 
    echo "[kickstart.s] Another container is already running!"
