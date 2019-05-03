@@ -33,6 +33,9 @@ CONTAINER_NAME=
 # The image (e.g. infracamp/kickstart-flavor-base:testing) specified in .kick.yml from:-section
 FROM_IMAGE=
 
+# The Host IP Address. Leave empty to autodetect.
+KICKSTART_HOST_IP=
+
 ############################
 ### CODE BELOW           ###
 ############################
@@ -82,12 +85,10 @@ function on_error () {
 }
 
 
-# USE -I to determine all interfaces (debian/ubuntu)
-KICKSTART_HOST_IP=$(hostname -I 2> /dev/null | awk '{print $1;}' )
 if [ "$KICKSTART_HOST_IP" == "" ]
 then
-    # Workaround for systems not supporting -I (alpine / ci-builds)
-    KICKSTART_HOST_IP=$(hostname -i 2> /dev/null | awk '{print $1;}')
+    # Autodetect for ubuntu, arch
+    KICKSTART_HOST_IP=$(ip route list | grep -v default | grep -v linkdown | grep src | tail -1 | awk 'match($0, / [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/){print substr($0, RSTART+1, RLENGTH-1)}' 2> /dev/null)
 fi;
 if [ "$KICKSTART_HOST_IP" == "" ]
 then

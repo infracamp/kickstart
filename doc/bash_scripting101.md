@@ -1,5 +1,8 @@
 # Bash scripting 101
 
+Styleguides:
+
+- https://google.github.io/styleguide/shell.xml
 
 ## Packing whole config-files in an ENV-Argument:
 
