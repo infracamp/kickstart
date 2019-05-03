@@ -98,7 +98,10 @@ then
 fi;
 
 
-CONTAINER_NAME=${PWD##*/}
+if [ $CONTAINER_NAME == "" ]
+then
+    CONTAINER_NAME=${PWD##*/}
+fi;
 
 
 
