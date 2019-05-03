@@ -18,7 +18,15 @@ use in stack or .env files.
 
 
 
+## If
 
+```
+if [[ "$someVar" == "xyz" ]]
+then
+
+fi;
+
+```
 
 
 ## Read command
