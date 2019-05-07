@@ -416,7 +416,7 @@ run_container() {
         _NETWORKS=$(docker network ls | grep $_STACK_NETWORK_NAME | wc -l)
         echo nets: $_NETWORKS
         if [ $_NETWORKS -eq 0 ]; then
-            docker swarm init
+            docker swarm init || true
             docker network create --attachable -d overlay $_STACK_NETWORK_NAME
         fi;
 
