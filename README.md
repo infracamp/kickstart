@@ -41,7 +41,7 @@ Run a ci-build (build and push using gitlab-ci-runner):
 ## Documents index
 
 - [InfraCamp Homepage](http://infracamp.org)
-- [**Setting up your environment**](doc/installing.md)
+- [**Setting up your environment**](doc/setup/installing-ubuntu-debian-mac.md)
 - [Bash Scripting 101](doc/bash_scripting101.md)
 - [.kick.yml reference](doc/kick.yml.md)
 

@@ -1,5 +1,8 @@
 # Bash scripting 101
 
+Styleguides:
+
+- https://google.github.io/styleguide/shell.xml
 
 ## Packing whole config-files in an ENV-Argument:
 
@@ -15,7 +18,15 @@ use in stack or .env files.
 
 
 
+## If
 
+```
+if [[ "$someVar" == "xyz" ]]
+then
+
+fi;
+
+```
 
 
 ## Read command
