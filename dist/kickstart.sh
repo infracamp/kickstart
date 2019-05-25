@@ -399,8 +399,8 @@ run_container() {
 
     ## Mutliarch support
     ##imageArchitecture=$( docker image inspect "$FROM_IMAGE" -f '{{.Architecture}}')
-    isArmImage=$(echo "$FROM_IMAGE" | grep "arm32v7")
-    isX86=$(uname -m | grep "x86")
+    isArmImage=$(echo "$FROM_IMAGE" | grep "arm32v7") || true
+    isX86=$(uname -m | grep "x86") || true
 
     if [ "$isX86" != "" ] && [ "$isArmImage" != '' ]
     then
