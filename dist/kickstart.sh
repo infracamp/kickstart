@@ -585,7 +585,7 @@ then
     for _cur_secret_name in $(find $secretsPath -type f -printf "%f\n")
     do
         echo "Adding secret from $secretsPath/$_cur_secret_name -> /run/secrets/$_cur_secret_name"
-        DOCKERE_OPT_PARAMS="$DOCKER_OPT_PARAMS -v '$secretsPath/$_cur_secret_name:/run/secrets/$_cur_secret_name' "
+        DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v '$secretsPath/$_cur_secret_name:/run/secrets/$_cur_secret_name' "
     done;
 fi;
 
