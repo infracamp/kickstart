@@ -1,0 +1,12 @@
+# Kickstart container config file - see https://gitub.com/infracamp/kickstart
+# Run ./kickstart.sh to start a development-container for this project
+version: 1
+from: "infracamp/kickstart-flavor-base"
+
+
+command:
+  build:
+    - "sudo apt-get update && sudo apt-get install -y shellcheck"
+
+  test:
+    - "shellcheck dist/kickstart.sh"
