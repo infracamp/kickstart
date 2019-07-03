@@ -78,7 +78,7 @@ function on_error () {
     local prog=$BASH_COMMAND
 
     echo -e "\e[1;101;30m\n" 1>&2
-    echo -en "KICKSTART ERROR: '$prog' (Exit code: $exit_code on ${PROGNAME} line $1)\n" 1>&2
+    echo -en "KICKSTART ERROR: '$prog' (Exit code: $exit_code on ${PROGNAME} line $1) - inspect output above for more information.\n" 1>&2
     echo -e "\e[0m" 1>&2
 
     exit 1
