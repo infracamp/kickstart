@@ -360,7 +360,7 @@ run_shell() {
         ;;
       k|K)
         echo "Killing running kickstart containers..."
-        docker kill `docker ps | grep "/kickstart/" | cut -d" " -f1`
+        docker kill `docker ps | grep "/kickstart/" | cut -d " " -f1`
         return 0;
         ;;
 
