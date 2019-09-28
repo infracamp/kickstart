@@ -50,31 +50,34 @@ set -o errtrace
 trap 'on_error $LINENO' ERR;
 PROGNAME=$(basename $0)
 
+############################# LOGGING SYSTEM #########################
+cols=$(tput cols)
 
-if test -t 1; then
-    # see if it supports colors...
-    ncolors=$(tput colors)
-    if test -n "$ncolors" && test $ncolors -ge 8; then
-        export COLOR_NC='\e[0m' # No Color
-        export COLOR_WHITE='\e[1;37m'
-        export COLOR_BLACK='\e[0;30m'
-        export COLOR_BLUE='\e[0;34m'
-        export COLOR_LIGHT_BLUE='\e[1;34m'
-        export COLOR_GREEN='\e[0;32m'
-        export COLOR_LIGHT_GREEN='\e[1;32m'
-        export COLOR_CYAN='\e[0;36m'
-        export COLOR_LIGHT_CYAN='\e[1;36m'
-        export COLOR_RED='\e[0;31m'
-        export COLOR_LIGHT_RED='\e[1;31m'
-        export COLOR_PURPLE='\e[0;35m'
-        export COLOR_LIGHT_PURPLE='\e[1;35m'
-        export COLOR_BROWN='\e[0;33m'
-        export COLOR_YELLOW='\e[1;33m'
-        export COLOR_GRAY='\e[0;30m'
-        export COLOR_LIGHT_GRAY='\e[0;37m'
-    fi;
-fi;
+function log () {
+  last_log=$1
+  printf "$(tput sc; tput bold)%.${cols}s" "$last_log";
+}
 
+function debug() {
+  last_log=$1
+  printf "$(tput sc; tput dim)%.${cols}s" "$last_log";
+}
+
+function ok() {
+  printf "$(tput rc; tput setaf 0; tput bold)%.${cols}s %s" "$last_log" "$1"
+  printf "$(tput rc)\033[$(expr $cols - 10)G$(tput bold)$(tput setaf 0)[$(tput setaf 2) %4s $(tput setaf 0)]$(tput sgr0)\n" "OK";
+}
+
+function warn() {
+  printf "$(tput rc; tput setaf 3; tput bold)%.${cols}s %s" "$last_log" "$1"
+  printf "$(tput rc)\033[$(expr $cols - 10)G$(tput bold)$(tput setaf 0)[$(tput setaf 3) %4s $(tput setaf 0)]$(tput sgr0)\n" "WARN";
+}
+
+function err() {
+  printf "$(tput rc; tput setaf 1; tput bold)%.${cols}s %s" "$last_log" "$1"
+  local msg=$1; printf "$(tput rc)\033[$(expr $cols - 10)G$(tput bold)$(tput setaf 0)[$(tput setaf 1) %4s $(tput setaf 0)]$(tput sgr0)\n" "ERR";
+}
+########################## END LOGGING SYSTEM #######################
 
 
 function on_error () {
@@ -88,7 +91,7 @@ function on_error () {
     exit 1
 }
 
-
+debug "Detecting KICKSTART_HOST_IP..."
 if [[ "$KICKSTART_HOST_IP" == "" ]]
 then
     # Autodetect for ubuntu, arch
@@ -100,17 +103,20 @@ then
     # See doc/workaround-plattforms.md for more about this
     KICKSTART_HOST_IP=$(ping -c 1 $(hostname) | grep icmp_seq | awk 'match($0,/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/){print substr($0, RSTART, RLENGTH)}')
 fi;
+ok " [$KICKSTART_HOST_IP]"
 
-
+debug "Detecting CONTAINER_NAME..."
 if [[ "$CONTAINER_NAME" == "" ]]
 then
     CONTAINER_NAME=${PWD##*/}
 fi;
-
+ok " [$CONTAINER_NAME]"
 
 
 KICKSTART_CACHE_DIR="$HOME/.kick_cache"
+debug "KICKSTART_CACHE_DIR is $KICKSTART_CACHE_DIR.."
 mkdir -p $KICKSTART_CACHE_DIR
+ok
 
 
 if [ "$DEV_CONTAINER_NAME" != "" ]
@@ -254,21 +260,24 @@ _usage() {
 
 
 _print_header() {
-    echo -e $COLOR_WHITE "
+    cols=$(tput cols)
 
- infracamp's
-   ▄█   ▄█▄  ▄█   ▄████████    ▄█   ▄█▄    ▄████████     ███        ▄████████    ▄████████     ███
-  ███ ▄███▀ ███  ███    ███   ███ ▄███▀   ███    ███ ▀█████████▄   ███    ███   ███    ███ ▀█████████▄
-  ███▐██▀   ███▌ ███    █▀    ███▐██▀     ███    █▀     ▀███▀▀██   ███    ███   ███    ███    ▀███▀▀██
- ▄█████▀    ███▌ ███         ▄█████▀      ███            ███   ▀   ███    ███  ▄███▄▄▄▄██▀     ███   ▀
-▀▀█████▄    ███▌ ███        ▀▀█████▄    ▀███████████     ███     ▀███████████ ▀▀███▀▀▀▀▀       ███
-  ███▐██▄   ███  ███    █▄    ███▐██▄            ███     ███       ███    ███ ▀███████████     ███
-  ███ ▀███▄ ███  ███    ███   ███ ▀███▄    ▄█    ███     ███       ███    ███   ███    ███     ███
-  ███   ▀█▀ █▀   ████████▀    ███   ▀█▀  ▄████████▀     ▄████▀     ███    █▀    ███    ███    ▄████▀
-  ▀                           ▀                                                 ███    ███
-  http://infracamp.org                                                                 happy containers
-  " $COLOR_YELLOW "
-+-------------------------------------------------------------------------------------------------------+
+    printf "\n$(tput setaf 4)"
+    printf "%.${cols}s\n" " infracamp's"
+    printf "$(tput setaf 7)"
+    printf "%b\n" "   ▄█   ▄█▄  ▄█   ▄████████    ▄█   ▄█▄    ▄████████     ███        ▄████████    ▄████████     ███"
+    printf "%b\n" "  ███ ▄███▀ ███  ███    ███   ███ ▄███▀   ███    ███ ▀█████████▄   ███    ███   ███    ███ ▀█████████▄ "
+    printf "%b\n" "  ███▐██▀   ███▌ ███    █▀    ███▐██▀     ███    █▀     ▀███▀▀██   ███    ███   ███    ███    ▀███▀▀██ "
+    printf "%b\n" " ▄█████▀    ███▌ ███         ▄█████▀      ███            ███   ▀   ███    ███  ▄███▄▄▄▄██▀     ███   ▀ "
+    printf "%b\n" "▀▀█████▄    ███▌ ███        ▀▀█████▄    ▀███████████     ███     ▀███████████ ▀▀███▀▀▀▀▀       ███ "
+    printf "%b\n" "  ███▐██▄   ███  ███    █▄    ███▐██▄            ███     ███       ███    ███ ▀███████████     ███ "
+    printf "%b\n" "  ███ ▀███▄ ███  ███    ███   ███ ▀███▄    ▄█    ███     ███       ███    ███   ███    ███     ███ "
+    printf "%b\n" "  ███   ▀█▀ █▀   ████████▀    ███   ▀█▀  ▄████████▀     ▄████▀     ███    █▀    ███    ███    ▄████▀ "
+    printf "%b\n" "  ▀                           ▀                                                 ███    ███"
+    printf "%.${cols}b\n" "  http://infracamp.org                                                                 happy containers"
+
+    printf "\n$(tput setaf 4)"
+echo "+-------------------------------------------------------------------------------------------------------+
 | Infracamp's Kickstart - DEVELOPER MODE                                                                |
 | Version: $_KICKSTART_CURRENT_VERSION
 | Flavour: $FROM_IMAGE (defined in 'from:'-section of .kick.yml)"
@@ -288,7 +297,7 @@ _print_header() {
     echo "| More information: https://github.com/infracamp/kickstart                         "
     echo "| Or ./kickstart.sh help                                                                                |"
     echo "+-------------------------------------------------------------------------------------------------------+"
-
+    printf "\n$(tput setaf 0)"
 }
 
 
@@ -296,7 +305,8 @@ run_shell() {
    echo -e $COLOR_CYAN;
    if [ `docker ps | grep "$CONTAINER_NAME\$" | wc -l` -gt 0 ]
    then
-        echo "[kickstart.sh] Container '$CONTAINER_NAME' already running"
+        log "[kickstart.sh] Container '$CONTAINER_NAME' already running"
+        warn
 
         choice="s"
         if [[ "$ARGUMENT" == "" ]]
@@ -338,10 +348,13 @@ run_shell() {
 
    fi
 
-   echo "[kickstart.s] Another container is already running!"
+   log "[kickstart.sh] Another container is already running!"
+   warn
+
+   printf "$(tput dim)\n"
    docker ps
    echo ""
-   read -r -p "Your choice: (i)gnore/run anyway, (s)hell, (k)ill, (a)bort?:" choice
+   read -r -p "$(tput rev)Your choice: (i)gnore/run anyway, (s)hell, (k)ill, (a)bort?:$(tput sgr0) " choice
    case "$choice" in
       i|I)
         run_container
