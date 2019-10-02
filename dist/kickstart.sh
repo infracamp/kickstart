@@ -454,7 +454,14 @@ run_container() {
     if [ ! -t 1 ]
     then
         # Switch to non-interactive terminal (ci-build etc)
+        # For Gitlab Actions: $UID unset (use uid of path)
         dev_uid=$(stat -c '%u' $PROGPATH)
+    fi;
+
+    if [ "$dev_uid" -eq "0" ]
+    then
+        # For Gitlab-CI: Gitlab-CI checks out everything world writable but as user root (0)
+        dev_uid=1000
     fi;
 
     cmd="docker $KICKSTART_DOCKER_OPTS run $terminal                \
