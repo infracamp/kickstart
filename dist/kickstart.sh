@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 PROGPATH="$( cd "$(dirname "$0")" ; pwd -P )"   # The absolute path to kickstart.sh
 #
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -454,7 +454,7 @@ run_container() {
     if [ ! -t 1 ]
     then
         # Switch to non-interactive terminal (ci-build etc)
-        dev_uid=1000
+        dev_uid=$(stat -c '%u' $PROGPATH)
     fi;
 
     cmd="docker $KICKSTART_DOCKER_OPTS run $terminal                \
