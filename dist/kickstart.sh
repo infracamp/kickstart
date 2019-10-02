@@ -460,7 +460,9 @@ run_container() {
 
     if [ "$dev_uid" -eq "0" ]
     then
-        # For Gitlab-CI: Gitlab-CI checks out everything world writable but as user root (0)
+        # Never run a container as root user
+        # For Gitlab-CI: Gitlab-CI checks out everything world writable but as user root (0) => Set UID to normal user
+        # (otherwise composer / npm won't install)
         dev_uid=1000
     fi;
 
