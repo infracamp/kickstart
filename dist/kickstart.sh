@@ -445,7 +445,7 @@ run_container() {
             docker network create --attachable -d overlay $_STACK_NETWORK_NAME
         fi;
 
-        docker stack deploy --prune -c $_STACKFILE $CONTAINER_NAME
+        docker stack deploy --prune --with-registry-auth -c $_STACKFILE $CONTAINER_NAME
         DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS --network $_STACK_NETWORK_NAME"
     fi;
 
