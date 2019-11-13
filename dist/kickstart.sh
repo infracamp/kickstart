@@ -10,8 +10,9 @@ PROGPATH="$( cd "$(dirname "$0")" ; pwd -P )"   # The absolute path to kickstart
 #
 # Config-File: .kick.yml
 # Website....: https://infracamp.org/getting-started/
-# Authos/Contributors/Copyright:
+# Copyright:
 #     - Matthias Leuffen <m@tth.es>
+#
 # Released under GNU General Public License <http://www.gnu.org/licenses/gpl-3.0.html>
 #
 ################################################################################################
