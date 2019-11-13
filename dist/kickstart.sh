@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 PROGPATH="$( cd "$(dirname "$0")" ; pwd -P )"   # The absolute path to kickstart.sh
 #
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -445,7 +445,7 @@ run_container() {
             docker network create --attachable -d overlay $_STACK_NETWORK_NAME
         fi;
 
-        docker stack deploy --prune -c $_STACKFILE $CONTAINER_NAME
+        docker stack deploy --prune --with-registry-auth -c $_STACKFILE $CONTAINER_NAME
         DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS --network $_STACK_NETWORK_NAME"
     fi;
 
@@ -454,6 +454,15 @@ run_container() {
     if [ ! -t 1 ]
     then
         # Switch to non-interactive terminal (ci-build etc)
+        # For Gitlab Actions: $UID unset (use uid of path)
+        dev_uid=$(stat -c '%u' $PROGPATH)
+    fi;
+
+    if [ "$dev_uid" -eq "0" ]
+    then
+        # Never run a container as root user
+        # For Gitlab-CI: Gitlab-CI checks out everything world writable but as user root (0) => Set UID to normal user
+        # (otherwise composer / npm won't install)
         dev_uid=1000
     fi;
 
