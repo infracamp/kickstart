@@ -1,4 +1,49 @@
-# kickstart - Autoprovisioning Microservice Container (Linux, Windows10, MacOS)
+# kickstart
+
+See [https://infracamp.org/project/kickstart] for detailed documentation.
+
+## TL;DR
+
+Download the `kickstart.sh` and install it by executing the curl command provided blow and place and 
+commit it within your project directory. To start-up a project you then just clone the repository and
+execute `./kickstart.sh` inside the projects root directory.
+
+On your local workstation, `kickstart.sh` will:
+- Start up the container setting env `DEV_MODE=1` and giving you an **interactive shell** as user `user` inside the container.
+- Mount the **project directory** to `/opt` inside the container so every user has the same absolute path.
+- Expose **ports 80,4000,4100,4200** on localhost so you can access the service with any browser at `http://localhost`
+  (configured by project in `.kickstartconfig` or global in `$HOME/.kickstartconfig`)
+- **Detect operating system** and container service (OSx, Linux, WSL2)
+- Set the **uid** of user `user` inside the container according to your actual uid so there will no permission problems
+- Check for other running instances of the project (Choose between: Kill, Shell or Ignore)
+- Securely mount your **ssh-key** into the container, so you can use git within your container
+- Mount the **bash history** into the container
+- Mount **cache directories** for **apt, npm, composer, pip** into the container
+- Evaluate global `$HOME/.kickcstartonfig` file for additional mounts/ports/settings
+- Securely provide developer's **secrets** from `$HOME/.kickstart/secrets/<project>/<secret_name>`to the container
+- Set **environment variables** according to `.env`-file
+- Detect and provide the **hosts's IP address** to the container (for running debuggers, etc) as env `DOCKER_HOST_IP`
+- Start **additional services** from `.kick-stack.yml` in composer format
+- Setup interactive shell (colors, screen-size, adjustments for osX, non-interactive shells)
+- **Run commands** defined in `.kick.yml`-file in the project folder (if using kickstart-flavor-containers)
+- Inform you about **updates** of `kickstart.sh` and provide auto-download updates by calling `./kickstart.sh --upgrade`
+- Provide access to **skeleton projects** that can be defined in a central git repository
+
+On testing stage `kickstart.sh` will:
+- Execute the tests the same way they will be executed in CI/CD environment. So you can debug 
+  on localhost instead of pushing over any over again.
+
+On CI/CD pipeline `kickstart.sh` will:
+- Ensure no ssh-keys or secrets are copied inside the container.
+- **Auto-detect** `gitlab-ci`, `github-actions`, `jenkins` build environment and determine `TAG` and `BRANCH`
+- Set permissions according to the build environment
+- **Build the container** running `docker build` and tagging with the correct tags
+- Logging into the **registry** accoring to the build environment
+- **Pushing** to a registry defined inside the build environment
+
+On Deploy-stage:
+- Autodetect docker-swarm, kubernetes by environment inside build environment
+- HTTP-PUSH to hooks urls
 
 A bash script to start and manage your develompment containers.
 
