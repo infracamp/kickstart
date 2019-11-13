@@ -4,7 +4,7 @@ See [https://infracamp.org/project/kickstart] for detailed documentation.
 
 ## TL;DR
 
-Download the `kickstart.sh` and install it by executing the curl command provided blow and place and 
+Download `kickstart.sh` and install it by executing the curl command provided blow and place and 
 commit it within your project directory. To start-up a project you then just clone the repository and
 execute `./kickstart.sh` inside the projects root directory.
 
