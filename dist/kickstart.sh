@@ -9,10 +9,8 @@ PROGPATH="$( cd "$(dirname "$0")" ; pwd -P )"   # The absolute path to kickstart
 # environment for this project.
 #
 # Config-File: .kick.yml
-# Website....: https://infracamp.org/getting-started/
-# Copyright:
-#     - Matthias Leuffen <m@tth.es>
-#
+# Website..: https://infracamp.org/getting-started/
+# Copyright: Matthias Leuffen <m@tth.es>
 # Released under GNU General Public License <http://www.gnu.org/licenses/gpl-3.0.html>
 #
 ################################################################################################
