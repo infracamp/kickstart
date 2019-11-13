@@ -10,7 +10,11 @@ PROGPATH="$( cd "$(dirname "$0")" ; pwd -P )"   # The absolute path to kickstart
 #
 # Config-File: .kick.yml
 # Website....: https://infracamp.org/getting-started/
-# Author.....: Matthias Leuffen <m@tth.es>
+# Authos.....:
+#     - Matthias Leuffen <m@tth.es>
+# Copyright..:
+#     - Matthias Leuffen <m@tth.es>
+# Licence....: GPL <http://www.gnu.org/licenses/gpl-3.0.html>
 #
 ################################################################################################
 ### DON'T CHANGE ANY VARIABLES HERE --- see ~/.kickstartconfig or ./.kickstartconfig instead ###
@@ -25,7 +29,7 @@ KICKSTART_DOCKER_RUN_OPTS=""
 # External Port bindings
 KICKSTART_PORTS="80:80/tcp;4000:4000/tcp;4100:4100/tcp;4200:4200/tcp;4000:4000/udp"
 
-# 1 = Don't try to download the images from the internet
+# 1 = Don't try to download the images fr/home/matthes/Projects/infracampom the internet
 OFFLINE_MODE=0
 
 # Specify the container name by yourself (switch of auto-detection)
