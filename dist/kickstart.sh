@@ -328,7 +328,7 @@ run_shell() {
                 then
                     shellarg="kick $ARGUMENT"
                 fi;
-
+                echo -e $COLOR_NC;
                 docker exec $terminal --user $KICKSTART_USER -e "DEV_TTYID=[SUB]" $CONTAINER_NAME $shellarg
 
                 echo -e $COLOR_CYAN;
@@ -353,7 +353,6 @@ run_shell() {
       s|S)
         echo "===> [kickstart.sh] Opening new shell: "
         echo -e $COLOR_NC
-
         docker exec $terminal --user $KICKSTART_USER -e "DEV_TTYID=[SUB]" `docker ps | grep "/kickstart/" | cut -d" " -f1` /bin/bash
 
         echo -e $COLOR_CYAN;
