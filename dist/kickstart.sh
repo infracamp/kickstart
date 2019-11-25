@@ -41,6 +41,9 @@ KICKSTART_HOST_IP=
 # Where to mount the current project folder (default: /opt)
 DOCKER_MOUNT_PARAMS="-v $PROGPATH/:/opt/"
 
+# User to run inside the container (Default: 'user')
+KICKSTART_USER="user"
+
 ############################
 ### CODE BELOW           ###
 ############################
@@ -204,7 +207,6 @@ fi
 if [ -e "$PROGPATH/.kickstartconfig" ]
 then
     echo "Loading $PROGPATH/.kickstartconfig (This is risky if you - abort if unsure)"
-    sleep 1
     # @todo Search for .kickstartconfig in gitignore to verify the user wants this.
     . $PROGPATH/.kickstartconfig
 fi
@@ -327,7 +329,7 @@ run_shell() {
                     shellarg="kick $ARGUMENT"
                 fi;
 
-                docker exec $terminal --user user -e "DEV_TTYID=[SUB]" $CONTAINER_NAME $shellarg
+                docker exec $terminal --user $KICKSTART_USER -e "DEV_TTYID=[SUB]" $CONTAINER_NAME $shellarg
 
                 echo -e $COLOR_CYAN;
                 echo "<=== [kickstart.sh] Leaving container."
@@ -352,7 +354,7 @@ run_shell() {
         echo "===> [kickstart.sh] Opening new shell: "
         echo -e $COLOR_NC
 
-        docker exec $terminal --user user -e "DEV_TTYID=[SUB]" `docker ps | grep "/kickstart/" | cut -d" " -f1` /bin/bash
+        docker exec $terminal --user $KICKSTART_USER -e "DEV_TTYID=[SUB]" `docker ps | grep "/kickstart/" | cut -d" " -f1` /bin/bash
 
         echo -e $COLOR_CYAN;
         echo "<=== [kickstart.sh] Leaving container."
