@@ -235,6 +235,9 @@ _usage() {
         $0 skel upgrade
             Upgrade to the latest kickstart version
 
+        $0 secret <secret_name>
+            Set / edit secret
+
         $0 wakeup
             Try to start a previous image with same container name (faster startup)
 
@@ -557,6 +560,17 @@ while [ "$#" -gt 0 ]; do
             exit 1
         fi
         exit 0;;
+
+    secret)
+        [[ "$2" == "" ]] && echo -e "Error: No secret specified\nUsage: $0 secret <secretname>" && exit 1;
+
+        secretFile="$HOME/.kickstart/secrets/$CONTAINER_NAME/$2"
+        mkdir -p $(dirname $secretFile)
+        editor $secretFile
+        echo "Edit successful: $secretFile"
+
+        exit 0;;
+
 
     ci-build|--ci-build)
         _ci_build $2 $3
