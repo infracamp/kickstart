@@ -617,8 +617,11 @@ fi
 
 if [ -e "$HOME/.bash_history" ]
 then
-    echo "Mounting $HOME/.bash_history..."
-    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.bash_history:/home/user/.bash_history";
+    bashHistoryFile="$HOME/.kickstart/bash_history/$CONTAINER_NAME";
+    echo "Mounting containers bash-history from $bashHistroyFile..."
+    mkdir -p $(dirname $bashHistoryFile)
+    touch $bashHistoryFile
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $bashHistoryFile:/home/user/.bash_history";
 fi
 
 if [ -e "$PROGPATH/.env" ]
