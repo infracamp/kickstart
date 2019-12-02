@@ -235,8 +235,11 @@ _usage() {
         $0 skel upgrade
             Upgrade to the latest kickstart version
 
-        $0 secret <secret_name>
-            Set / edit secret
+        $0 secret list
+            List all secrets stored for this project
+
+        $0 secret edit [secret_name]
+            Edit / create secret
 
         $0 wakeup
             Try to start a previous image with same container name (faster startup)
@@ -562,10 +565,17 @@ while [ "$#" -gt 0 ]; do
         exit 0;;
 
     secret)
-        [[ "$2" == "" ]] && echo -e "Error: No secret specified\nUsage: $0 secret <secretname>" && exit 1;
+        secretDir="$HOME/.kickstart/secrets/$CONTAINER_NAME"
+        mkdir -p $(dirname $secretDir)
 
-        secretFile="$HOME/.kickstart/secrets/$CONTAINER_NAME/$2"
-        mkdir -p $(dirname $secretFile)
+        [[ "$2" == "list" ]] && echo "Listing secrets from $secretDir" && ls -l $secretDir && exit 0;
+
+        [[ "$2" != "edit" ]] && echo -e "Error: No secret specified\nUsage: $0 secret list|edit [<secretname>]" && exit 1;
+
+        [[ "$3" == "" ]] && echo -e "Error: No secret specified\nUsage: $0 secret list|edit [<secretname>]" && exit 1;
+
+        secretFile=$secretDir/$3
+
         editor $secretFile
         echo "Edit successful: $secretFile"
 
