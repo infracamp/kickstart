@@ -566,7 +566,7 @@ while [ "$#" -gt 0 ]; do
 
     secrets)
         secretDir="$HOME/.kickstart/secrets/$CONTAINER_NAME"
-        mkdir -p $(dirname $secretDir)
+        mkdir -p $secretDir
 
         [[ "$2" == "list" ]] && echo "Listing secrets from $secretDir:" && ls $secretDir && exit 0;
 
