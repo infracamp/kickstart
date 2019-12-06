@@ -385,15 +385,16 @@ run_shell() {
 _ci_build() {
 
     echo "CI_BUILD: Building container.. (CI_* Env is preset by gitlab-ci-runner)";
-
-    BUILD_TAG=":$CI_BUILD_NAME"
     if [ "$CI_REGISTRY" == "" ]
     then
         echo "[Error deploy]: Environment CI_REGISTRY not set"
         exit 1
     fi
 
-    CMD="docker build --pull -t $CI_REGISTRY_IMAGE$BUILD_TAG -f ./Dockerfile ."
+    local imageName="$CI_REGISTRY_IMAGE:$CI_BUILD_NAME"
+
+
+    CMD="docker build --pull -t $imageName -f ./Dockerfile ."
     echo "[Building] Running '$CMD' (MODE1)";
     eval $CMD
 
@@ -405,8 +406,8 @@ _ci_build() {
         echo "No registry credentials provided in env CI_REGISTRY_PASSWORD - skipping docker login."
     fi;
 
-    docker push $CI_REGISTRY_IMAGE$BUILD_TAG
-    echo "Push successful..."
+    docker push $imageName
+    echo "Push successful (Image: $imageName)..."
     exit
 }
 
