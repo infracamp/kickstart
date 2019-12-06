@@ -385,14 +385,10 @@ run_shell() {
 _ci_build() {
 
     echo "CI_BUILD: Building container.. (CI_* Env is preset by gitlab-ci-runner)";
-    if [ "$CI_REGISTRY" == "" ]
-    then
-        echo "[Error deploy]: Environment CI_REGISTRY not set"
-        exit 1
-    fi
+    [[ "$CI_REGISTRY" == "" ]] && echo "[Error deploy]: Environment CI_REGISTRY not set" && exit 1;
+    [[ "$CI_BUILD_NAME" == "" ]] && echo "CI_BUILD_NAME not set - setting default tag to 'latest'" && CI_BUILD_NAME="latest";
 
     local imageName="$CI_REGISTRY_IMAGE:$CI_BUILD_NAME"
-
 
     CMD="docker build --pull -t $imageName -f ./Dockerfile ."
     echo "[Building] Running '$CMD' (MODE1)";
