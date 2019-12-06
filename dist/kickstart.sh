@@ -402,7 +402,7 @@ _ci_build() {
         echo "Logging in to: $CI_REGISTRY_USER @ $CI_REGISTRY"
         echo "$CI_REGISTRY_PASSWORD" | docker login --username $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
     else
-        echo "No registry cedentials provided - skipping docker login."
+        echo "No registry credentials provided in env CI_REGISTRY_PASSWORD - skipping docker login."
     fi;
 
     docker push $CI_REGISTRY_IMAGE$BUILD_TAG
