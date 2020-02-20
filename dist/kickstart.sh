@@ -44,6 +44,11 @@ DOCKER_MOUNT_PARAMS="-v $PROGPATH/:/opt/"
 # User to run inside the container (Default: 'user')
 KICKSTART_USER="user"
 
+
+# For windows users only: Change this for mapping from wsl to docker4win: `echo "KICKSTART_WIN_PATH=C:/" >> ~/.kickstartconfig`
+KICKSTART_WIN_PATH=""
+
+
 ############################
 ### CODE BELOW           ###
 ############################
@@ -142,7 +147,7 @@ _KICKSTART_CURRENT_VERSION="1.2.0"
 ##
 # This variables can be overwritten by ~/.kickstartconfig
 #
-KICKSTART_WIN_PATH=""
+
 
 
 ask_user() {
