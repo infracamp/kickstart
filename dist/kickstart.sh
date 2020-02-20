@@ -444,6 +444,7 @@ run_container() {
 		# For Windows users: Rewrite Path of bash to Windows path
 		# Will work only on drive C:/
 		PROGPATH="${PROGPATH/\/mnt\/c\//$KICKSTART_WIN_PATH}"
+		DOCKER_MOUNT_PARAMS="-v $PROGPATH/:/opt/"
 	fi
 
     docker rm $CONTAINER_NAME || true
