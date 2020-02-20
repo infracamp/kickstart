@@ -45,7 +45,7 @@ DOCKER_MOUNT_PARAMS="-v $PROGPATH/:/opt/"
 KICKSTART_USER="user"
 
 
-# For windows users only: Change this for mapping from wsl to docker4win. Execute this in linux shell:
+# For WINDOWS (WSL) users only: Change this for mapping from wsl to docker4win. Execute this in linux shell:
 # `echo "KICKSTART_WIN_PATH=C:/" >> ~/.kickstartconfig`
 KICKSTART_WIN_PATH=""
 
