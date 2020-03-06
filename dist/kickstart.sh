@@ -257,12 +257,13 @@ _usage() {
         $0 :debug       Execute the container in debug-mode (don't execute kick-commands)
 
     ARGUMENTS
-        -h                             Show this help
-        -t <tagName> --tag=<tagname>   Run container with this tag (development)
-        -u --unflavored                Run the container whithout running any scripts (develpment)
-        --offline                      Do not pull images nor ask for version upgrades
-        --no-tty                       Disable interactive tty
-
+        -h                    Show this help
+        -t, --tag=<tagname>   Run container with this tag (development)
+        -u, --unflavored      Run the container whithout running any scripts (develpment)
+            --offline         Do not pull images nor ask for version upgrades
+            --no-tty          Disable interactive tty
+        -e, --env ENV=value   Set environment variables
+        -v, --volume  list    Bind mount a volume
     "
     exit 1
 }
@@ -522,6 +523,10 @@ while [ "$#" -gt 0 ]; do
     -t) USE_PIPF_VERSION="-t $2"; shift 2;;
     --tag=*)
         USE_PIPF_VERSION="-t ${1#*=}"; shift 1;;
+
+    -e|--env) DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -e '$2'"; shift 2;;
+
+    -v|--volume) DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v '$2'"; shift 2;;
 
     --offline)
         OFFLINE_MODE=1; shift 1;;
