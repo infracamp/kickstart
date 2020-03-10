@@ -320,12 +320,12 @@ run_shell() {
         if [ "$forceKillContainer" -eq "1" ]
         then
             choice="r"
+        else
+            if [[ "$ARGUMENT" == "" ]]
+            then
+                read -r -p "Your choice: (S)hell, (r)estart, (a)bort?" choice
+            fi
         fi;
-
-        if [[ "$ARGUMENT" == "" ]]
-        then
-            read -r -p "Your choice: (S)hell, (r)estart, (a)bort?" choice
-        fi
 
         case "$choice" in
             a)
