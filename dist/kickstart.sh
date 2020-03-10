@@ -264,6 +264,7 @@ _usage() {
             --no-tty          Disable interactive tty
         -e, --env ENV=value   Set environment variables
         -v, --volume  list    Bind mount a volume
+        -f, --force           Restart / kill running containers
     "
     exit 1
 }
@@ -315,6 +316,12 @@ run_shell() {
         echo "[kickstart.sh] Container '$CONTAINER_NAME' already running"
 
         choice="s"
+
+        if [ "$forceKillContainer" -eq "1" ]
+        then
+            choice="r"
+        fi;
+
         if [[ "$ARGUMENT" == "" ]]
         then
             read -r -p "Your choice: (S)hell, (r)estart, (a)bort?" choice
@@ -357,7 +364,11 @@ run_shell() {
    echo "[kickstart.s] Another container is already running!"
    docker ps
    echo ""
-   read -r -p "Your choice: (i)gnore/run anyway, (s)hell, (k)ill, (a)bort?:" choice
+   choice="k"
+   if [ "$forceKillContainer" -eq "0" ]
+   then
+      read -r -p "Your choice: (i)gnore/run anyway, (s)hell, (k)ill, (a)bort?:" choice
+   fi;
    case "$choice" in
       i|I)
         run_container
@@ -514,7 +525,7 @@ run_container() {
 
 
 
-
+forceKillContainer=0
 ARGUMENT="";
 # Parse the command parameters
 ARGUMENT="";
@@ -527,6 +538,11 @@ while [ "$#" -gt 0 ]; do
     -e|--env) DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -e '$2'"; shift 2;;
 
     -v|--volume) DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v '$2'"; shift 2;;
+
+    -f|--force)
+        forceKillContainer=1;
+        shift 1;
+        ;;
 
     --offline)
         OFFLINE_MODE=1; shift 1;;
