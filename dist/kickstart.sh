@@ -265,6 +265,7 @@ _usage() {
         -e, --env ENV=value   Set environment variables
         -v, --volume  list    Bind mount a volume
         -f, --force           Restart / kill running containers
+        -r, --reset           Shutdown all services and restart stack services
     "
     exit 1
 }
@@ -467,6 +468,12 @@ run_container() {
     if [ -e "$_STACKFILE" ]; then
         _STACK_NETWORK_NAME=$CONTAINER_NAME
 
+        if [ $resetServices -eq 1 ]
+        then
+          echo "Reset Services. Leaving swarm..."
+          docker swarm leave --force
+        fi;
+
         echo "Startin in stack mode... (network: '$_STACK_NETWORK_NAME')"
         _NETWORKS=$(docker network ls | grep $_STACK_NETWORK_NAME | wc -l)
         echo nets: $_NETWORKS
@@ -529,6 +536,7 @@ forceKillContainer=0
 ARGUMENT="";
 # Parse the command parameters
 ARGUMENT="";
+resetServices=0;
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -t) USE_PIPF_VERSION="-t $2"; shift 2;;
@@ -541,6 +549,11 @@ while [ "$#" -gt 0 ]; do
 
     -f|--force)
         forceKillContainer=1;
+        shift 1;
+        ;;
+
+    -r|--reset)
+        resetServices=1;
         shift 1;
         ;;
 
