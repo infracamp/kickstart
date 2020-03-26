@@ -659,6 +659,12 @@ then
     DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.gitconfig:/home/user/.gitconfig";
 fi
 
+if [ -e "$HOME/.git-credentials" ]
+then
+    echo "Mounting $HOME/.git-credentials..."
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $HOME/.git-credentials:/home/user/.git-credentials";
+fi
+
 if [ -e "$HOME/.bash_history" ]
 then
     bashHistoryFile="$HOME/.kickstart/bash_history/$CONTAINER_NAME";
