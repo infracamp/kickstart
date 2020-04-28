@@ -430,7 +430,12 @@ _ci_build() {
 
 DOCKER_OPT_PARAMS=$KICKSTART_DOCKER_RUN_OPTS;
 
-
+# Load .env before evaluating -e command line options
+if [ -e "$PROGPATH/.env" ]
+then
+    echo "Adding docker environment from $PROGPATH/.env (Development only)"
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS --env-file $PROGPATH/.env";
+fi
 
 run_container() {
     echo -e $COLOR_GREEN"Loading container '$FROM_IMAGE'..."
@@ -674,11 +679,7 @@ then
     DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $bashHistoryFile:/home/user/.bash_history";
 fi
 
-if [ -e "$PROGPATH/.env" ]
-then
-    echo "Adding docker environment from $PROGPATH/.env (Development only)"
-    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS --env-file $PROGPATH/.env";
-fi
+
 
 secretsPath="$HOME/.kickstart/secrets/$CONTAINER_NAME"
 echo "Scanning for secrets in $secretsPath";
