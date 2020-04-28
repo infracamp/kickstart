@@ -430,11 +430,18 @@ _ci_build() {
 
 DOCKER_OPT_PARAMS=$KICKSTART_DOCKER_RUN_OPTS;
 
+
 # Load .env before evaluating -e command line options
-if [ -e "$PROGPATH/.env" ]
-then
+if [ -e "$PROGPATH/.env" ]; then
     echo "Adding docker environment from $PROGPATH/.env (Development only)"
     DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS --env-file $PROGPATH/.env";
+elif [ -e "$PROGPATH/.env.dist" ] && [ "$#" == "0" ]; then
+    echo "An '.env' file is not existing but a '.env.dist' was found."
+    echo ""
+    echo "This normally indicates that you have to create a developers .env manually"
+    echo "in order to start the project."
+    echo ""
+    read -r -p "Hit (enter) to continue without .env file or CTRL-C to exit." choice
 fi
 
 run_container() {
