@@ -444,6 +444,10 @@ elif [ -e "$PROGPATH/.env.dist" ] && [ "$#" == "0" ]; then
     read -r -p "Hit (enter) to continue without .env file or CTRL-C to exit." choice
 fi
 
+
+
+
+
 run_container() {
     echo -e $COLOR_GREEN"Loading container '$FROM_IMAGE'..."
     if [ "$OFFLINE_MODE" == "0" ]
@@ -698,6 +702,16 @@ then
         DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v '$secretsPath/$_cur_secret_name:/run/secrets/$_cur_secret_name' "
     done;
 fi;
+
+
+echo "Scanning env for KICKSECRET_*";
+for secret in $(env | grep ^KICKSECRET | sed 's/KICKSECRET_\([a-zA-Z0-9_]\+\).*/\1/'); do
+    secretName="KICKSECRET_$secret"
+    secretFile="/tmp/.kicksecret.$secretName"
+    echo ${!secretName} > $secretFile
+    echo "+ adding secret from env: $secretName > /run/secrets/$secret";
+    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v '$secretFile:/run/secrets/$secret' "
+done;
 
 
 # Ports to be exposed

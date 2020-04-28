@@ -8,10 +8,10 @@ services:
   some_service:
     image: some/image
     networks:
-      - project_name
+      - dist
 
 
 networks:
-  project_name:
+  dist:
     external: true
     ## Very important: Otherwise no connection

@@ -219,7 +219,11 @@ KICKSTART_PORTS="80:4200;25:25"     # Change the Port-Mappings
 KICKSTART_WIN_PATH=                 # If running on windows - map bash 
 ```
 
+## Secrets
 
+Secrets can be added either via the command `kickstart secrets add <secretname>` or
+via Environment variables (used for ci-builds). All variables names `KICKSECRET_name` will
+be mounted to `/run/secrets/name`.
 
 
 ## Project-wide config file
