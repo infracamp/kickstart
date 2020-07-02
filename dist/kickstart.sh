@@ -368,12 +368,16 @@ run_shell() {
    choice="k"
    if [ "$forceKillContainer" -eq "0" ]
    then
-      read -r -p "Your choice: (i)gnore/run anyway, (s)hell, (k)ill, (a)bort?:" choice
+      read -r -p "Your choice: (i)gnore/run anyway, (d)isable port-exposure and run, (s)hell, (k)ill, (a)bort?: " choice
    fi;
    case "$choice" in
       i|I)
         run_container
         return 0;
+        ;;
+      d|D)
+        echo "Removing port-exposure... (The container will not have any ports exposed!)"
+        KICKSTART_PORTS="";
         ;;
       s|S)
         echo "===> [kickstart.sh] Opening new shell: "
@@ -456,6 +460,13 @@ run_container() {
     else
         echo -e $COLOR_RED "OFFLINE MODE! Not pulling image from registy. " $COLOR_NC
     fi;
+
+    # Ports to be exposed
+    IFS=';' read -r -a _ports <<< "$KICKSTART_PORTS"
+    for _port in "${_ports[@]}"
+    do
+        DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -p $_port"
+    done
 
     ## Mutliarch support
     ##imageArchitecture=$( docker image inspect "$FROM_IMAGE" -f '{{.Architecture}}')
@@ -714,12 +725,7 @@ for secret in $(env | grep ^KICKSECRET | sed 's/KICKSECRET_\([a-zA-Z0-9_]\+\).*/
 done;
 
 
-# Ports to be exposed
-IFS=';' read -r -a _ports <<< "$KICKSTART_PORTS"
-for _port in "${_ports[@]}"
-do
-    DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -p $_port"
-done
+
 
 DOCKER_OPT_PARAMS="$DOCKER_OPT_PARAMS -v $KICKSTART_CACHE_DIR:/mnt/.kick_cache"
 
