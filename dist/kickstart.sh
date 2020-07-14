@@ -427,6 +427,17 @@ _ci_build() {
 
     docker push $imageName
     echo "Push successful (Image: $imageName)..."
+
+    if [ "$CI_BUILD_TAG" != "" ]
+    then
+        ## For Gitlab CI
+        local taggedImageName="$CI_REGISTRY_IMAGE:$CI_BUILD_TAG"
+        echo  "CI_BUILD_TAG found: '$CI_BUILD_TAG' - pushing to '$taggedImageName'"
+        docker tag $imageName $taggedImageName
+        docker push $taggedImageName
+        echo "Push successful (Image: $taggedImageName)..."
+    fi;
+
     exit
 }
 

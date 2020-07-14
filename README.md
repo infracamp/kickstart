@@ -283,6 +283,27 @@ command:
 
 ```
 
+### Building tagged containers with gitlab-ci
+
+Add a tag to the master branch and add the gitlab-ci config
+
+```yaml
+latest:
+  stage: build
+  script:
+    - ./kickstart.sh ci-build
+  only:
+    - master
+    - /^v.*$/
+```
+
+This will create a `latest` tag on every push and a latest and `vx.x.x` tagged
+docker image on tagged builds.
+
+
+
+
+
 ## Building own flavors
 
 Feel free to build your own flavors.
